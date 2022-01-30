@@ -1,0 +1,8 @@
+dist/*
+cfg.yml
+.tmp/
+.env
+.vscode
+*.key
+*.key.pub
+node_modules/
