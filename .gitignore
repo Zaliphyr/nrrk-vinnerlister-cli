@@ -1,8 +1,9 @@
-dist/*
-cfg.yml
-.tmp/
+.DS_Store
+node_modules
+/build
+/.svelte-kit
+/package
 .env
-.vscode
-*.key
-*.key.pub
-node_modules/
+.env.*
+!.env.example
+.vscode/*
