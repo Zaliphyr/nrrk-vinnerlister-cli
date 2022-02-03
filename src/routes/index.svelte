@@ -1,6 +1,20 @@
+<script context="module">
+  export const load = async ({ fetch }) => {
+    const res = await fetch(`/utstillinger.json`);
+    if (res.ok) {
+      const contests = await res.json();
+      return {
+        props: { contests },
+      };
+    }
+  };
+</script>
+
 <script>
-  import DogShowList from "$lib/dogShowList.svelte";
+  import DogShowList from "$lib/contestList.svelte";
   import WinnerList from "$lib/winnerList.svelte";
+
+  export let contests;
 
   const currentYear = new Date().getFullYear();
   let year = currentYear;
@@ -26,7 +40,7 @@
 
 <WinnerList />
 
-<DogShowList {year} />
+<DogShowList {year} {contests} />
 
 <style>
   h1 {

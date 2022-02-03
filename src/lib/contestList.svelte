@@ -1,0 +1,41 @@
+<script>
+  export let year = null;
+  export let contests = [];
+</script>
+
+<div style="margin-top: 2rem;">
+  {#if year}
+    <h2>Utstillinger</h2>
+  {/if}
+
+  {#if contests?.length}
+    <table>
+      <thead>
+        <tr>
+          <th>Navn</th>
+          <th>Dato</th>
+          <th>Hunder</th>
+          <th>Sted</th>
+          <th>Arrangør</th>
+          <th>Dommer</th>
+        </tr>
+      </thead>
+      <tbody>
+        {#each contests as contest}
+          <tr>
+            <td>
+              <a href={`/utstillinger/${contest.id}`}>
+                {contest.name}
+              </a>
+            </td>
+            <td>{contest.date}</td>
+            <td>{contest.numberOfDogs}</td>
+            <td>{contest.location}</td>
+            <td>{contest.host}</td>
+            <td>{contest.judge}</td>
+          </tr>
+        {/each}
+      </tbody>
+    </table>
+  {/if}
+</div>

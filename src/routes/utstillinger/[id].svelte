@@ -1,76 +1,72 @@
-<script>
-  export let contest = {
-    id: 1,
-    name: "Leangen open",
-    date: "22. juli 2022",
-    numberOfDogs: 55,
-    location: "Trondheim",
-    host: "NKK Trondheim",
-    judge: "Linda Karlsen",
+<script context="module">
+  export const load = async ({ fetch, params }) => {
+    const res = await fetch(`/utstillinger/${params.id}.json`);
+    if (res.ok) {
+      const contest = await res.json();
+      return {
+        props: { contest },
+      };
+    }
 
-    results: [
-      {
-        dogName: "Fantejentas Jimin",
-        dogId: 1,
-        result: "BIR",
-        points: 25,
-        critiqueLink: "https://vg.no",
-      },
-      {
-        dogName: "Zal sin hund",
-        dogId: 2,
-        result: "BIM",
-        points: 20,
-        critiqueLink: null,
-      },
-    ],
+    return {
+      props: { isError: true },
+    };
   };
 </script>
 
-<h1>{contest.name}</h1>
+<script>
+  export let contest;
+  export let isError;
+</script>
 
-<div class="contest-info">
-  <p style="grid-column: span 2;">{contest.date}, {contest.location}</p>
-  <p>Arrangør:</p>
-  <p>{contest.host}</p>
-  <p>Hunder:</p>
-  <p>{contest.numberOfDogs}</p>
-  <p>Dommer:</p>
-  <p>{contest.judge}</p>
-</div>
-
-<h2>Resultater</h2>
-{#if contest.results.length}
-  <table>
-    <thead>
-      <tr>
-        <th>Hund</th>
-        <th>Resultat</th>
-        <th>Poeng</th>
-        <th>Kritikk</th>
-      </tr>
-    </thead>
-    <tbody>
-      {#each contest.results as result}
-        <tr>
-          <td>
-            <a href={`/hunder/${result.dogId}`}>
-              {result.dogName}
-            </a>
-          </td>
-          <td>{result.result}</td>
-          <td>{result.points}</td>
-          <td>
-            {#if result.critiqueLink}
-              <a href={result.critiqueLink} target="_blank">Se kritikk</a>
-            {/if}
-          </td>
-        </tr>
-      {/each}
-    </tbody>
-  </table>
+{#if isError}
+  <h1>Utstilling ikke funnet</h1>
 {:else}
-  Ingen resultater enda
+  <h1>{contest.name}</h1>
+
+  <div class="contest-info">
+    <p style="grid-column: span 2;">{contest.date}, {contest.location}</p>
+    <p>Arrangør:</p>
+    <p>{contest.host}</p>
+    <p>Hunder:</p>
+    <p>{contest.numberOfDogs}</p>
+    <p>Dommer:</p>
+    <p>{contest.judge}</p>
+  </div>
+
+  <h2>Resultater</h2>
+  {#if contest.results?.length}
+    <table>
+      <thead>
+        <tr>
+          <th>Hund</th>
+          <th>Resultat</th>
+          <th>Poeng</th>
+          <th>Kritikk</th>
+        </tr>
+      </thead>
+      <tbody>
+        {#each contest.results as result}
+          <tr>
+            <td>
+              <a href={`/hunder/${result.dogId}`}>
+                {result.dogName}
+              </a>
+            </td>
+            <td>{result.result}</td>
+            <td>{result.points}</td>
+            <td>
+              {#if result.critiqueLink}
+                <a href={result.critiqueLink} target="_blank">Se kritikk</a>
+              {/if}
+            </td>
+          </tr>
+        {/each}
+      </tbody>
+    </table>
+  {:else}
+    Ingen resultater enda
+  {/if}
 {/if}
 
 <style>

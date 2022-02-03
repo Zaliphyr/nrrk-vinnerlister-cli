@@ -1,7 +1,6 @@
 <script context="module">
   export const load = async ({ fetch, params }) => {
     const res = await fetch(`/hunder/${params.id}.json`);
-
     if (res.ok) {
       const dog = await res.json();
       return {
@@ -17,6 +16,7 @@
 
 <script>
   export let dog;
+  export let isError = false;
 
   // export let dog = {
   //   name: "Hundenavnet",
@@ -67,110 +67,116 @@
   let isShowingAllResults = false;
 </script>
 
-<h1>{dog.name}</h1>
-
-<div class="info-column-container">
-  <div class="info-column-two-col">
-    <h3 style="grid-column: span 2;">Info</h3>
-    <p>ID:</p>
-    <p>{dog.nkkId}</p>
-    <p>Kjønn:</p>
-    <p>{dog.gender}</p>
-    <p>Fargevar:</p>
-    <p>{dog.color}</p>
-  </div>
-  <div class="info-column">
-    <h3 style="column-span: 2;">Far</h3>
-    <p>{dog.fatherTitles}</p>
-    <p>{dog.fatherName}</p>
-    <p>ID: {dog.fatherId}</p>
-  </div>
-  <div class="info-column">
-    <h3 style="column-span: 2;">Mor</h3>
-    <p>{dog.motherTitles}</p>
-    <p>{dog.motherName}</p>
-    <p>ID: {dog.motherId}</p>
-  </div>
-</div>
-
-{#if dog.pedigreeDbLink}
-  <a href={dog.pedigreeDbLink} target="_blank">
-    <button>Se i pedigree-database</button>
-  </a>
-{/if}
-
-<h2>Antall premieringer totalt</h2>
-{#if dog?.awards?.length}
-  <table>
-    <thead>
-      <tr>
-        <th>Kval.</th>
-        <th>Poeng</th>
-        <th>Antall</th>
-      </tr>
-    </thead>
-    <tbody>
-      {#each dog.awards.filter( (award) => (isShowingAllResults ? true : award.count > 0) ) as awardEntry}
-        <tr>
-          <td>{awardEntry.awardName}</td>
-          <td>{awardEntry.points}</td>
-          <td>{awardEntry.count}</td>
-        </tr>
-      {/each}
-    </tbody>
-  </table>
+{#if isError}
+  <h1>Hund ikke funnet</h1>
 {:else}
-  Ingen premieringer enda
-{/if}
+  <h1>{dog.name}</h1>
 
-<button on:click={() => (isShowingAllResults = !isShowingAllResults)}>
-  {#if isShowingAllResults}
-    Vis kun oppnådde premieringer
-  {:else}
-    Vis alle premieringer
+  <div class="info-column-container">
+    <div class="info-column-two-col">
+      <h3 style="grid-column: span 2;">Info</h3>
+      <p>ID:</p>
+      <p>{dog.nkkId}</p>
+      <p>Kjønn:</p>
+      <p>{dog.gender}</p>
+      <p>Fargevar:</p>
+      <p>{dog.color}</p>
+    </div>
+    <div class="info-column">
+      <h3 style="column-span: 2;">Far</h3>
+      <p>{dog.fatherTitles}</p>
+      <p>{dog.fatherName}</p>
+      <p>ID: {dog.fatherId}</p>
+    </div>
+    <div class="info-column">
+      <h3 style="column-span: 2;">Mor</h3>
+      <p>{dog.motherTitles}</p>
+      <p>{dog.motherName}</p>
+      <p>ID: {dog.motherId}</p>
+    </div>
+  </div>
+
+  {#if dog.pedigreeDbLink}
+    <a href={dog.pedigreeDbLink} target="_blank">
+      <button>Se i pedigree-database</button>
+    </a>
   {/if}
-</button>
 
-<h2>Alle resultater</h2>
-{#if dog?.contests?.length}
-  <table>
-    <thead>
-      <tr>
-        <th>Utstilling</th>
-        <th>Resultat</th>
-        <th>Poeng</th>
-        <th>Dato</th>
-        <th>Sted</th>
-        <th>Arrangør</th>
-        <th>Dommer</th>
-        <th>Kritikk</th>
-      </tr>
-    </thead>
-    <tbody>
-      {#each dog.contests as contestEntry}
+  <h2>Antall premieringer totalt</h2>
+  {#if dog?.awards?.length}
+    <table>
+      <thead>
         <tr>
-          <td>
-            <a href={`/utstillinger/${contestEntry.contestId}`}>
-              {contestEntry.contestName}
-            </a>
-          </td>
-          <td>{contestEntry.result}</td>
-          <td>{contestEntry.points}</td>
-          <td>{contestEntry.date}</td>
-          <td>{contestEntry.location}</td>
-          <td>{contestEntry.host}</td>
-          <td>{contestEntry.judge}</td>
-          <td>
-            {#if contestEntry.critiqueLink}
-              <a href={contestEntry.critiqueLink} target="_blank">Se kritikk</a>
-            {/if}
-          </td>
+          <th>Kval.</th>
+          <th>Poeng</th>
+          <th>Antall</th>
         </tr>
-      {/each}
-    </tbody>
-  </table>
-{:else}
-  Ingen resultater enda
+      </thead>
+      <tbody>
+        {#each dog.awards.filter( (award) => (isShowingAllResults ? true : award.count > 0) ) as awardEntry}
+          <tr>
+            <td>{awardEntry.awardName}</td>
+            <td>{awardEntry.points}</td>
+            <td>{awardEntry.count}</td>
+          </tr>
+        {/each}
+      </tbody>
+    </table>
+  {:else}
+    Ingen premieringer enda
+  {/if}
+
+  <button on:click={() => (isShowingAllResults = !isShowingAllResults)}>
+    {#if isShowingAllResults}
+      Vis kun oppnådde premieringer
+    {:else}
+      Vis alle premieringer
+    {/if}
+  </button>
+
+  <h2>Alle resultater</h2>
+  {#if dog?.contests?.length}
+    <table>
+      <thead>
+        <tr>
+          <th>Utstilling</th>
+          <th>Resultat</th>
+          <th>Poeng</th>
+          <th>Dato</th>
+          <th>Sted</th>
+          <th>Arrangør</th>
+          <th>Dommer</th>
+          <th>Kritikk</th>
+        </tr>
+      </thead>
+      <tbody>
+        {#each dog.contests as contestEntry}
+          <tr>
+            <td>
+              <a href={`/utstillinger/${contestEntry.contestId}`}>
+                {contestEntry.contestName}
+              </a>
+            </td>
+            <td>{contestEntry.result}</td>
+            <td>{contestEntry.points}</td>
+            <td>{contestEntry.date}</td>
+            <td>{contestEntry.location}</td>
+            <td>{contestEntry.host}</td>
+            <td>{contestEntry.judge}</td>
+            <td>
+              {#if contestEntry.critiqueLink}
+                <a href={contestEntry.critiqueLink} target="_blank"
+                  >Se kritikk</a
+                >
+              {/if}
+            </td>
+          </tr>
+        {/each}
+      </tbody>
+    </table>
+  {:else}
+    Ingen resultater enda
+  {/if}
 {/if}
 
 <style>
