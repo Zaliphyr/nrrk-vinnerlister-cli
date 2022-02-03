@@ -32,7 +32,7 @@
       <tr>
         <th>Navn</th>
         <th>Dato</th>
-        <th>Ant. hunder</th>
+        <th>Hunder</th>
         <th>Sted</th>
         <th>Arrangør</th>
         <th>Dommer</th>

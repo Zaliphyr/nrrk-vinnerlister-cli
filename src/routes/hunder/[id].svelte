@@ -1,49 +1,68 @@
-<script>
-  export let dog = {
-    name: "Hundenavnet",
-    nkkId: 99999,
-    gender: "M",
-    color: "Brun idk",
-    fatherTitles: "NUCH",
-    fatherName: "Fantejentas Jimin",
-    fatherId: 12345,
-    motherTitles: "",
-    motherName: "Damenavn",
-    motherId: 564656,
-    pedigreeDbLink: "https://vg.no",
+<script context="module">
+  export const load = async ({ fetch, params }) => {
+    const res = await fetch(`/hunder/${params.id}.json`);
 
-    awards: [
-      { awardName: "BIR", count: 2, points: 25 },
-      { awardName: "xx", count: 0, points: 22 },
-      { awardName: "BIM", count: 1, points: 20 },
-      { awardName: "xx2", count: 0, points: 5 },
-    ],
+    if (res.ok) {
+      const dog = await res.json();
+      return {
+        props: { dog },
+      };
+    }
 
-    contests: [
-      {
-        contestId: 1,
-        contestName: "NKK Leangen",
-        result: "BIR",
-        points: 25,
-        date: "22. juni 2022",
-        location: "Trondheim",
-        host: "NKK Midt-Norge",
-        judge: "Linda Karlsen",
-        critiqueLink: "https://vg.no",
-      },
-      {
-        contestId: 2,
-        contestName: "NKK asd",
-        result: "asd",
-        points: 12,
-        date: "11. juni 2022",
-        location: "Oslo",
-        host: "Oslo klubb",
-        judge: "Ragnar",
-        critiqueLink: null,
-      },
-    ],
+    return {
+      props: { isError: true },
+    };
   };
+</script>
+
+<script>
+  export let dog;
+
+  // export let dog = {
+  //   name: "Hundenavnet",
+  //   nkkId: 99999,
+  //   gender: "M",
+  //   color: "Brun idk",
+  //   fatherTitles: "NUCH",
+  //   fatherName: "Fantejentas Jimin",
+  //   fatherId: 12345,
+  //   motherTitles: "",
+  //   motherName: "Damenavn",
+  //   motherId: 564656,
+  //   pedigreeDbLink: "https://vg.no",
+
+  //   awards: [
+  //     { awardName: "BIR", count: 2, points: 25 },
+  //     { awardName: "xx", count: 0, points: 22 },
+  //     { awardName: "BIM", count: 1, points: 20 },
+  //     { awardName: "xx2", count: 0, points: 5 },
+  //   ],
+
+  //   contests: [
+  //     {
+  //       contestId: 1,
+  //       contestName: "NKK Leangen",
+  //       result: "BIR",
+  //       points: 25,
+  //       date: "22. juni 2022",
+  //       location: "Trondheim",
+  //       host: "NKK Midt-Norge",
+  //       judge: "Linda Karlsen",
+  //       critiqueLink: "https://vg.no",
+  //     },
+  //     {
+  //       contestId: 2,
+  //       contestName: "NKK asd",
+  //       result: "asd",
+  //       points: 12,
+  //       date: "11. juni 2022",
+  //       location: "Oslo",
+  //       host: "Oslo klubb",
+  //       judge: "Ragnar",
+  //       critiqueLink: null,
+  //     },
+  //   ],
+  // };
 
   let isShowingAllResults = false;
 </script>
@@ -81,7 +100,7 @@
 {/if}
 
 <h2>Antall premieringer totalt</h2>
-{#if dog.awards.length}
+{#if dog?.awards?.length}
   <table>
     <thead>
       <tr>
@@ -113,7 +132,7 @@
 </button>
 
 <h2>Alle resultater</h2>
-{#if dog.contests.length}
+{#if dog?.contests?.length}
   <table>
     <thead>
       <tr>

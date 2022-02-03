@@ -1,30 +1,22 @@
+<script context="module">
+  export const load = async ({ fetch }) => {
+    const res = await fetch("/hunder.json");
+
+    if (res.ok) {
+      const dogList = await res.json();
+      return {
+        props: { dogList },
+      };
+    }
+
+    return {
+      props: { isError: true },
+    };
+  };
+</script>
+
 <script>
-  export let dogList = [
-    {
-      id: 1,
-      name: "Fantejentas Jimin",
-      numberOfResults: 42,
-      lastResultDate: "12. Juni 2021",
-    },
-    {
-      id: 2,
-      name: "Zal sin hund",
-      numberOfResults: 11,
-      lastResultDate: "11. Juni 2021",
-    },
-    {
-      id: 31,
-      name: "Tux",
-      numberOfResults: 5,
-      lastResultDate: "5. August 2020",
-    },
-    {
-      id: 4,
-      name: "Skaubos Aslan",
-      numberOfResults: 3,
-      lastResultDate: "1. Mai 2021",
-    },
-  ];
+  export let dogList;
 </script>
 
 <h1>Alle hunder</h1>
