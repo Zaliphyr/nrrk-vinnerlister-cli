@@ -8,10 +8,10 @@
         props: { dogData },
       };
     }
+
     return {
-      props: {
-        error: { code: res.status },
-      },
+      status: res.status,
+      error: res.error,
     };
   };
 </script>
@@ -21,6 +21,7 @@
   export let error = null;
 
   import { page } from "$app/stores";
+  import Error from "../__error.svelte";
   const id = $page.params.id;
 
   let isShowingAllResults = false;
@@ -143,9 +144,9 @@
             <td>{contestEntry.contestJudge}</td>
             <td>
               {#if contestEntry.critiqueLink}
-                <a href={contestEntry.critiqueLink} target="_blank"
-                  >Se kritikk</a
-                >
+                <a href={contestEntry.critiqueLink} target="_blank">
+                  Se kritikk
+                </a>
               {/if}
             </td>
           </tr>
