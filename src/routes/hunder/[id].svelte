@@ -1,109 +1,84 @@
 <script context="module">
   export const load = async ({ fetch, params }) => {
     const res = await fetch(`/hunder/${params.id}.json`);
+
     if (res.ok) {
-      const dog = await res.json();
+      const dogData = await res.json();
       return {
-        props: { dog },
+        props: { dogData },
       };
     }
-
     return {
-      props: { isError: true },
+      props: {
+        error: { code: res.status },
+      },
     };
   };
 </script>
 
 <script>
-  export let dog;
-  export let isError = false;
+  export let dogData;
+  export let error = null;
 
-  // export let dog = {
-  //   name: "Hundenavnet",
-  //   nkkId: 99999,
-  //   gender: "M",
-  //   color: "Brun idk",
-  //   fatherTitles: "NUCH",
-  //   fatherName: "Fantejentas Jimin",
-  //   fatherId: 12345,
-  //   motherTitles: "",
-  //   motherName: "Damenavn",
-  //   motherId: 564656,
-  //   pedigreeDbLink: "https://vg.no",
-
-  //   awards: [
-  //     { awardName: "BIR", count: 2, points: 25 },
-  //     { awardName: "xx", count: 0, points: 22 },
-  //     { awardName: "BIM", count: 1, points: 20 },
-  //     { awardName: "xx2", count: 0, points: 5 },
-  //   ],
-
-  //   contests: [
-  //     {
-  //       contestId: 1,
-  //       contestName: "NKK Leangen",
-  //       result: "BIR",
-  //       points: 25,
-  //       date: "22. juni 2022",
-  //       location: "Trondheim",
-  //       host: "NKK Midt-Norge",
-  //       judge: "Linda Karlsen",
-  //       critiqueLink: "https://vg.no",
-  //     },
-  //     {
-  //       contestId: 2,
-  //       contestName: "NKK asd",
-  //       result: "asd",
-  //       points: 12,
-  //       date: "11. juni 2022",
-  //       location: "Oslo",
-  //       host: "Oslo klubb",
-  //       judge: "Ragnar",
-  //       critiqueLink: null,
-  //     },
-  //   ],
-  // };
+  import { page } from "$app/stores";
+  const id = $page.params.id;
 
   let isShowingAllResults = false;
 </script>
 
-{#if isError}
-  <h1>Hund ikke funnet</h1>
+{#if error}
+  {#if error.code === 404}
+    <h1>Hund ikke funnet</h1>
+    <p>Fant ingen hund med system-id {id}</p>
+  {:else}
+    <h1>Noe gikk galt</h1>
+  {/if}
 {:else}
-  <h1>{dog.name}</h1>
+  <h1>
+    {dogData.dog.name}
+    {#if dogData.dog.titles}
+      <span style="font-size: 1.25rem;">
+        {dogData.dog.titles}
+      </span>
+    {/if}
+  </h1>
 
   <div class="info-column-container">
     <div class="info-column-two-col">
       <h3 style="grid-column: span 2;">Info</h3>
       <p>ID:</p>
-      <p>{dog.nkkId}</p>
+      <p>{dogData.dog.nkkId}</p>
       <p>Kjønn:</p>
-      <p>{dog.gender}</p>
+      <p>{dogData.dog.gender}</p>
       <p>Fargevar:</p>
-      <p>{dog.color}</p>
+      <p>{dogData.dog.color}</p>
     </div>
     <div class="info-column">
       <h3 style="column-span: 2;">Far</h3>
-      <p>{dog.fatherTitles}</p>
-      <p>{dog.fatherName}</p>
-      <p>ID: {dog.fatherId}</p>
+      <p>{dogData.dog.fatherTitles}</p>
+      <p>{dogData.dog.fatherName}</p>
+      <p>ID: {dogData.dog.fatherId}</p>
     </div>
     <div class="info-column">
       <h3 style="column-span: 2;">Mor</h3>
-      <p>{dog.motherTitles}</p>
-      <p>{dog.motherName}</p>
-      <p>ID: {dog.motherId}</p>
+      <p>{dogData.dog.motherTitles}</p>
+      <p>{dogData.dog.motherName}</p>
+      <p>ID: {dogData.dog.motherId}</p>
     </div>
   </div>
 
-  {#if dog.pedigreeDbLink}
-    <a href={dog.pedigreeDbLink} target="_blank">
+  {#if dogData.dog.pedigreeDbLink}
+    <a
+      href={dogData.dog.pedigreeDbLink}
+      target="_blank"
+      style="width: fit-content;"
+    >
       <button>Se i pedigree-database</button>
     </a>
   {/if}
 
   <h2>Antall premieringer totalt</h2>
-  {#if dog?.awards?.length}
+  {#if dogData?.awards?.length}
     <table>
       <thead>
         <tr>
@@ -113,11 +88,11 @@
         </tr>
       </thead>
       <tbody>
-        {#each dog.awards.filter( (award) => (isShowingAllResults ? true : award.count > 0) ) as awardEntry}
+        {#each dogData.awards.filter( (award) => (isShowingAllResults ? true : award.count > 0) ) as awardEntry}
           <tr>
             <td>{awardEntry.awardName}</td>
             <td>{awardEntry.points}</td>
-            <td>{awardEntry.count}</td>
+            <td>{awardEntry.count || "-"}</td>
           </tr>
         {/each}
       </tbody>
@@ -135,7 +110,7 @@
   </button>
 
   <h2>Alle resultater</h2>
-  {#if dog?.contests?.length}
+  {#if dogData?.contests?.length}
     <table>
       <thead>
         <tr>
@@ -150,7 +125,7 @@
         </tr>
       </thead>
       <tbody>
-        {#each dog.contests as contestEntry}
+        {#each dogData.contests as contestEntry}
           <tr>
             <td>
               <a href={`/utstillinger/${contestEntry.contestId}`}>
@@ -158,11 +133,14 @@
               </a>
             </td>
             <td>{contestEntry.result}</td>
-            <td>{contestEntry.points}</td>
-            <td>{contestEntry.date}</td>
-            <td>{contestEntry.location}</td>
-            <td>{contestEntry.host}</td>
-            <td>{contestEntry.judge}</td>
+            <td>
+              {contestEntry.pointsByResult + contestEntry.pointsByNumDogs}
+              ({contestEntry.pointsByResult}+{contestEntry.pointsByNumDogs})
+            </td>
+            <td>{contestEntry.contestDate}</td>
+            <td>{contestEntry.contestLocation}</td>
+            <td>{contestEntry.contestHost}</td>
+            <td>{contestEntry.contestJudge}</td>
             <td>
               {#if contestEntry.critiqueLink}
                 <a href={contestEntry.critiqueLink} target="_blank"
