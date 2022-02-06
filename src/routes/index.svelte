@@ -1,12 +1,32 @@
 <script context="module">
   export const load = async ({ fetch }) => {
-    const res = await fetch(`/utstillinger.json`);
-    if (res.ok) {
-      const contests = await res.json();
+    const contestPromise = fetch(`/utstillinger.json`);
+    const dogPromise = fetch("/hunder.json");
+
+    const [contestRes, dogRes] = await Promise.all([
+      contestPromise,
+      dogPromise,
+    ]);
+
+    if (!contestRes.ok) {
       return {
-        props: { contests },
+        status: contestRes.status,
+        error: contestRes.error,
       };
     }
+    if (!dogRes.ok) {
+      return {
+        status: dogRes.status,
+        error: dogRes.error,
+      };
+    }
+
+    const contests = await contestRes.json();
+    const dogs = await dogRes.json();
+
+    return {
+      props: { contests, dogs },
+    };
   };
 </script>
 
@@ -15,6 +35,7 @@
   import WinnerList from "$lib/winnerList.svelte";
 
   export let contests;
+  export let dogs;
 
   const currentYear = new Date().getFullYear();
   let year = currentYear;
@@ -38,7 +59,7 @@
   </button>
 </div>
 
-<WinnerList />
+<WinnerList {dogs} />
 
 <DogShowList {year} {contests} />
 

@@ -37,8 +37,10 @@
             {dog.name}
           </a>
         </td>
-        <td>{dog.numberOfResults}</td>
-        <td>{dog.lastResultDate}</td>
+        <td>Kommer</td>
+        <td>Kommer</td>
+        <!-- <td>{dog.numberOfResults}</td>
+        <td>{dog.lastResultDate}</td> -->
       </tr>
     {/each}
   </tbody>

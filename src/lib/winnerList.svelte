@@ -1,27 +1,5 @@
 <script>
-  export let winnerList = [
-    {
-      dogId: 1,
-      dogName: "Fantejentas Jimin",
-      numberOfContests: 12,
-      points: 420,
-      pointsSplit: [18, 12, 12, 10, 5],
-    },
-    {
-      dogId: 2,
-      dogName: "Zal sin hund",
-      numberOfContests: 4,
-      points: 69,
-      pointsSplit: [25, 11],
-    },
-    {
-      dogId: 3,
-      dogName: "Tux",
-      numberOfContests: 1,
-      points: 42,
-      pointsSplit: [42],
-    },
-  ];
+  export let dogs;
 </script>
 
 <h2 style="margin-top: 1rem;">Vinnerliste</h2>
@@ -34,21 +12,23 @@
     </tr>
   </thead>
   <tbody>
-    {#each winnerList as winnerRow}
+    {#each dogs as dog}
       <tr>
         <td>
-          <a href={`/hunder/${winnerRow.dogId}`}>
-            {winnerRow.dogName}
+          <a href={`/hunder/${dog.id}`}>
+            {dog.name}
           </a>
         </td>
         <td>
-          {winnerRow.points}
+          <!-- {winnerRow.points}
           {#if winnerRow.pointsSplit.length > 1}
             ({winnerRow.pointsSplit.join("+")})
-          {/if}
+          {/if} -->
+          Kommer
         </td>
         <td>
-          {winnerRow.numberOfContests}
+          Kommer
+          <!-- {winnerRow.numberOfContests} -->
         </td>
       </tr>
     {/each}
