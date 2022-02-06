@@ -3,6 +3,7 @@
 </script>
 
 <h2 style="margin-top: 1rem;">Vinnerliste</h2>
+<p style="margin: 0.5rem 0">Kun de fem beste resultater er inkludert</p>
 <table>
   <thead>
     <tr>
@@ -15,20 +16,18 @@
     {#each dogs as dog}
       <tr>
         <td>
-          <a href={`/hunder/${dog.id}`}>
-            {dog.name}
+          <a href={`/hunder/${dog.dogId}`}>
+            {dog.dogName}
           </a>
         </td>
         <td>
-          <!-- {winnerRow.points}
-          {#if winnerRow.pointsSplit.length > 1}
-            ({winnerRow.pointsSplit.join("+")})
-          {/if} -->
-          Kommer
+          {dog.pointsSum}
+          {#if dog.points.length > 1}
+            ({dog.points.join("+")})
+          {/if}
         </td>
         <td>
-          Kommer
-          <!-- {winnerRow.numberOfContests} -->
+          {dog.numberOfContests}
         </td>
       </tr>
     {/each}

@@ -1,31 +1,20 @@
 <script context="module">
+  const currentYear = new Date().getFullYear();
+
   export const load = async ({ fetch }) => {
-    const contestPromise = fetch(`/utstillinger.json`);
-    const dogPromise = fetch("/hunder.json");
+    const winnerListRes = await fetch(`/${currentYear}.json`);
 
-    const [contestRes, dogRes] = await Promise.all([
-      contestPromise,
-      dogPromise,
-    ]);
-
-    if (!contestRes.ok) {
+    if (!winnerListRes.ok) {
       return {
-        status: contestRes.status,
-        error: contestRes.error,
-      };
-    }
-    if (!dogRes.ok) {
-      return {
-        status: dogRes.status,
-        error: dogRes.error,
+        status: winnerListRes.status,
+        error: winnerListRes.error,
       };
     }
 
-    const contests = await contestRes.json();
-    const dogs = await dogRes.json();
+    const winnerList = await winnerListRes.json();
 
     return {
-      props: { contests, dogs },
+      props: { winnerList },
     };
   };
 </script>
@@ -34,8 +23,7 @@
   import DogShowList from "$lib/contestList.svelte";
   import WinnerList from "$lib/winnerList.svelte";
 
-  export let contests;
-  export let dogs;
+  export let winnerList;
 
   const currentYear = new Date().getFullYear();
   let year = currentYear;
@@ -59,9 +47,9 @@
   </button>
 </div>
 
-<WinnerList {dogs} />
+<WinnerList dogs={winnerList.topList} />
 
-<DogShowList {year} {contests} />
+<DogShowList {year} contests={winnerList.contests} />
 
 <style>
   h1 {
