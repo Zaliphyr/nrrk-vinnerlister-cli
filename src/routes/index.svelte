@@ -14,7 +14,7 @@
     const winnerList = await winnerListRes.json();
 
     return {
-      props: { winnerList },
+      props: { resultsByYear: { [currentYear]: winnerList } },
     };
   };
 </script>
@@ -23,15 +23,38 @@
   import DogShowList from "$lib/contestList.svelte";
   import WinnerList from "$lib/winnerList.svelte";
 
-  export let winnerList;
+  const todayYear = new Date().getFullYear();
+  let year = todayYear;
 
-  const currentYear = new Date().getFullYear();
-  let year = currentYear;
+  export let resultsByYear;
+  let winnerList = resultsByYear[todayYear];
 
-  function setYear(newYear) {
-    if (newYear <= currentYear) {
+  async function setYear(newYear) {
+    if (newYear <= todayYear) {
       year = newYear;
     }
+    if (newYear in resultsByYear) {
+      winnerList = resultsByYear[newYear];
+      console.log(winnerList);
+    } else {
+      winnerList = null;
+      const newWinnerList = await getYearData(newYear);
+      winnerList = newWinnerList;
+      resultsByYear[newYear] = newWinnerList;
+    }
+  }
+
+  async function getYearData() {
+    const winnerListRes = await fetch(`/${year}.json`);
+
+    if (!winnerListRes.ok) {
+      return {
+        status: winnerListRes.status,
+        error: winnerListRes.error,
+      };
+    }
+
+    return winnerListRes.json();
   }
 </script>
 
@@ -42,14 +65,18 @@
   <h2 style="width: 4.5rem; text-align: center;">
     {year}
   </h2>
-  <button on:click={() => setYear(year + 1)} disabled={year >= currentYear}>
+  <button on:click={() => setYear(year + 1)} disabled={year >= todayYear}>
     next
   </button>
 </div>
 
-<WinnerList dogs={winnerList.topList} />
+{#if winnerList}
+  <WinnerList dogs={winnerList.topList} {year} />
 
-<DogShowList {year} contests={winnerList.contests} />
+  <DogShowList {year} contests={winnerList.contests} />
+{:else}
+  <p>Henter data</p>
+{/if}
 
 <style>
   h1 {

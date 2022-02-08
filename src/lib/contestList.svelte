@@ -1,6 +1,6 @@
 <script>
   export let year = null;
-  export let contests = [];
+  export let contests;
 </script>
 
 <div style="margin-top: 2rem;">
@@ -37,5 +37,7 @@
         {/each}
       </tbody>
     </table>
+  {:else}
+    <p style="margin: 0.5rem 0">Ingen utstillinger funnet for {year}</p>
   {/if}
 </div>
