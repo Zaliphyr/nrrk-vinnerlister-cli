@@ -18,14 +18,17 @@
 <script>
   import InformationBox from "$lib/informationBox.svelte";
   import Input from "$lib/input.svelte";
-  import NewDog from "$lib/newDog.svelte";
+  import DogEditor from "$lib/dogEditor.svelte";
 
   export let dogList;
 
   let searchText = "";
   let dogBeingEdited = null;
   let isAddingDog = false;
+
   let newDogName = "";
+  let editedDogName = "";
+  let deletedDogName = "";
 
   $: filteredDogList = searchText
     ? dogList.filter(
@@ -40,11 +43,28 @@
 
   $: editedId = dogBeingEdited ? dogBeingEdited?.id : null;
 
-  function saveEditedDog() {}
-
   async function onNewDogAdded(newDogData) {
-    isAddingDog = false;
+    resetSuccessMessagesAndFetchData();
     newDogName = newDogData.name;
+  }
+
+  async function onDogUpdated(newDogData) {
+    resetSuccessMessagesAndFetchData();
+    editedDogName = newDogData.name;
+  }
+
+  function onDogDeleted(deletedDogData) {
+    resetSuccessMessagesAndFetchData();
+    deletedDogName = deletedDogData.name;
+  }
+
+  async function resetSuccessMessagesAndFetchData() {
+    dogBeingEdited = null;
+    isAddingDog = false;
+    newDogName = "";
+    editedDogName = "";
+    deletedDogName = "";
+
     const res = await fetch("/hunder.json");
     if (res.ok) {
       dogList = await res.json();
@@ -63,7 +83,13 @@
 >
 
 {#if isAddingDog}
-  <NewDog onCancel={() => (isAddingDog = false)} onFinish={onNewDogAdded} />
+  <DogEditor
+    isNewDog
+    onCancel={() => (isAddingDog = false)}
+    onFinish={onNewDogAdded}
+    saveHttpMethod="POST"
+    saveUrl="/admin/hunder.json"
+  />
 {:else}
   <button
     style="margin-top: 1.5rem;"
@@ -74,11 +100,13 @@
   </button>
 {/if}
 
-{#if newDogName}
+{#if editedDogName || newDogName || deletedDogName}
   <InformationBox
     variant="success"
-    margin="1rem 0"
-    text={`Hund ${newDogName} lagt til`}
+    margin="1rem 0 0 0"
+    text={`Hund ${editedDogName || newDogName || deletedDogName} ${
+      editedDogName ? "oppdatert" : newDogName ? "lagt til" : "slettet"
+    }`}
   />
 {/if}
 
@@ -107,100 +135,77 @@
     </thead>
     <tbody>
       {#each filteredDogList as dog}
-        <tr class={dog.name === newDogName ? "new-dog-row" : ""}>
+        <tr
+          class={dog.name === newDogName || dog.name === editedDogName
+            ? "updated-dog-row"
+            : ""}
+        >
           <td>
-            {#if !dogBeingEdited}
-              <button
-                on:click={() => (dogBeingEdited = { ...dog })}
-                disabled={isAddingDog}
-              >
-                Rediger
-              </button>
-            {/if}
-            {#if dog.id === editedId}
-              <button on:click={saveEditedDog}>Lagre</button>
-              <button on:click={() => (dogBeingEdited = null)}>Avbryt</button>
-            {/if}
+            <button
+              on:click={() => (dogBeingEdited = { ...dog })}
+              disabled={isAddingDog}
+            >
+              Rediger
+            </button>
           </td>
 
           <td>
-            {#if dog.id === editedId}
-              <input type="text" bind:value={dogBeingEdited.name} />
-            {:else}
-              <a href={`/hunder/${dog.id}`}>
-                {dog.name}
-              </a>
-            {/if}
+            <a href={`/hunder/${dog.id}`}>
+              {dog.name}
+            </a>
           </td>
 
           <td>
-            {#if dog.id === editedId}
-              <input type="text" bind:value={dogBeingEdited.nkkId} />
-            {:else}
-              <p>{dog.nkkId}</p>
-            {/if}
+            <p>{dog.nkkId}</p>
           </td>
 
           <td>
-            {#if dog.id === editedId}
-              <select bind:value={dogBeingEdited.gender}>
-                <option value="Hann">Hann</option>
-                <option value="Tispe">Tispe</option>
-              </select>
-            {:else}
-              <p>{dog.gender}</p>
-            {/if}
+            <p>{dog.gender}</p>
           </td>
 
           <td>
-            {#if dog.id === editedId}
-              <input type="text" bind:value={dogBeingEdited.titles} />
-            {:else}
-              <p>{dog.titles}</p>
-            {/if}
+            <p>{dog.titles}</p>
           </td>
 
           <td>
-            {#if dog.id === editedId}
-              <input type="text" bind:value={dogBeingEdited.fatherTitles} />
-              <input type="text" bind:value={dogBeingEdited.fatherName} />
-              <input type="text" bind:value={dogBeingEdited.fatherId} />
-            {:else}
-              {#if dog.fatherTitles}
-                <p>{dog.fatherTitles}</p>
-              {/if}
-              <p>{dog.fatherName}</p>
-              <p>{dog.fatherId}</p>
+            {#if dog.fatherTitles}
+              <p>{dog.fatherTitles}</p>
             {/if}
+            <p>{dog.fatherName}</p>
+            <p>{dog.fatherId}</p>
           </td>
 
           <td>
-            {#if dog.id === editedId}
-              <input type="text" bind:value={dogBeingEdited.motherTitles} />
-              <input type="text" bind:value={dogBeingEdited.motherName} />
-              <input type="text" bind:value={dogBeingEdited.motherId} />
-            {:else}
-              {#if dog.motherTitles}
-                <p>{dog.motherTitles}</p>
-              {/if}
-              <p>{dog.motherName}</p>
-              <p>{dog.motherId}</p>
+            {#if dog.motherTitles}
+              <p>{dog.motherTitles}</p>
             {/if}
+            <p>{dog.motherName}</p>
+            <p>{dog.motherId}</p>
           </td>
 
           <td>
-            {#if dog.id === editedId}
-              <input type="text" bind:value={dogBeingEdited.pedigreeDbLink} />
-            {:else}
-              <a href={dog.pedigreeDbLink} target="_blank"
-                >{dog.pedigreeDbLink}</a
-              >
-            {/if}
+            <a href={dog.pedigreeDbLink} target="_blank">{dog.pedigreeDbLink}</a
+            >
           </td>
         </tr>
       {/each}
     </tbody>
   </table>
+{/if}
+
+{#if dogBeingEdited}
+  <div class="modal-backdrop" on:click={() => (dogBeingEdited = null)}>
+    <DogEditor
+      dog={dogBeingEdited}
+      isNewDog={false}
+      onCancel={() => (dogBeingEdited = null)}
+      onFinish={onDogUpdated}
+      onDelete={onDogDeleted}
+      saveUrl={`/admin/hunder/${dogBeingEdited.id}.json`}
+      saveHttpMethod="PATCH"
+      isModal
+    />
+  </div>
 {/if}
 
 <style>
@@ -209,7 +214,23 @@
     vertical-align: middle;
   }
 
-  .new-dog-row {
+  .updated-dog-row {
     background-color: var(--successColorMedium);
+  }
+
+  .modal-backdrop {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 1;
+  }
+  .modal-backdrop:hover {
+    cursor: pointer;
   }
 </style>

@@ -2,21 +2,14 @@
   import Input from "$lib/input.svelte";
   import InformationBox from "./informationBox.svelte";
 
+  export let saveHttpMethod;
+  export let saveUrl;
   export let onCancel;
   export let onFinish;
-
-  let errorFields = [];
-  let errorMessage = "";
-
-  const requiredFields = [
-    { fieldName: "name", displayName: "Navn" },
-    { fieldName: "gender", displayName: "Kjønn" },
-    { fieldName: "color", displayName: "Fargevar" },
-    { fieldName: "fatherName", displayName: "Fars navn" },
-    { fieldName: "motherName", displayName: "Mors navn" },
-  ];
-
-  let newDog = {
+  export let onDelete;
+  export let isNewDog;
+  export let isModal = false;
+  export let dog = {
     titles: "",
     name: "",
     nkkId: "",
@@ -31,18 +24,41 @@
     motherId: "",
   };
 
+  let errorFields = [];
+  let errorMessage = "";
+  let isDeleting = false;
+
+  const requiredFields = [
+    { fieldName: "name", displayName: "Navn" },
+    { fieldName: "gender", displayName: "Kjønn" },
+    { fieldName: "color", displayName: "Fargevar" },
+    { fieldName: "fatherName", displayName: "Fars navn" },
+    { fieldName: "motherName", displayName: "Mors navn" },
+  ];
+
   async function save() {
     let isFieldErr = checkFields();
     if (isFieldErr) {
       return;
     }
 
-    const res = await fetch(`/admin/hunder.json`, {
-      method: "POST",
-      body: JSON.stringify(newDog),
+    const res = await fetch(saveUrl, {
+      method: saveHttpMethod,
+      body: JSON.stringify(dog),
     });
     if (res.ok) {
-      onFinish(newDog);
+      onFinish(dog);
+    } else {
+      errorMessage = `Det skjedde en feil ved lagring av hund. Feilkode ${res.status}.`;
+    }
+  }
+
+  async function deleteDog() {
+    const res = await fetch(`/admin/hunder/${dog.id}.json`, {
+      method: "DELETE",
+    });
+    if (res.ok) {
+      onDelete(dog);
     } else {
       errorMessage = `Det skjedde en feil ved lagring av hund. Feilkode ${res.status}.`;
     }
@@ -52,7 +68,7 @@
     let fullErrorFields = [];
 
     requiredFields.forEach((field) => {
-      if (!newDog[field.fieldName]) {
+      if (!dog[field.fieldName]) {
         fullErrorFields.push(field);
       }
     });
@@ -67,17 +83,24 @@
 
     return fullErrorFields.length > 0;
   }
+
+  function onContainerClick(e) {
+    e.stopPropagation();
+  }
 </script>
 
-<div class="newDogContainer">
-  <h2>Ny hund</h2>
+<div
+  class={`dog-container ${isModal ? "dog-modal" : ""}`}
+  on:click={onContainerClick}
+>
+  <h2>{isNewDog ? "Ny hund" : `Rediger hund`}</h2>
 
   <div class="horiz-wrap-flex" style="gap: 1rem; margin: 2rem 0;">
     <Input
       type="text"
       title="Titler"
-      value={newDog.titles}
-      onChange={(newVal) => (newDog.titles = newVal)}
+      value={dog.titles}
+      onChange={(newVal) => (dog.titles = newVal)}
       width="8rem"
       error={errorFields.includes("titles")}
     />
@@ -85,16 +108,16 @@
     <Input
       type="text"
       title="Navn*"
-      value={newDog.name}
-      onChange={(newVal) => (newDog.name = newVal)}
+      value={dog.name}
+      onChange={(newVal) => (dog.name = newVal)}
       error={errorFields.includes("name")}
     />
 
     <Input
       type="text"
       title="ID"
-      value={newDog.nkkId}
-      onChange={(newVal) => (newDog.nkkId = newVal)}
+      value={dog.nkkId}
+      onChange={(newVal) => (dog.nkkId = newVal)}
       width="8rem"
       error={errorFields.includes("nkkId")}
     />
@@ -103,8 +126,8 @@
   <Input
     type="text"
     title="Pedigree-lenke"
-    value={newDog.pedigreeDbLink}
-    onChange={(newVal) => (newDog.pedigreeDbLink = newVal)}
+    value={dog.pedigreeDbLink}
+    onChange={(newVal) => (dog.pedigreeDbLink = newVal)}
     error={errorFields.includes("pedigreeDbLink")}
   />
 
@@ -114,12 +137,12 @@
   >
     <p>Kjønn:</p>
     <label>
-      <input type="radio" bind:group={newDog.gender} name="gender" value="M" />
+      <input type="radio" bind:group={dog.gender} name="gender" value="M" />
       Hannhund
     </label>
 
     <label>
-      <input type="radio" bind:group={newDog.gender} name="gender" value="F" />
+      <input type="radio" bind:group={dog.gender} name="gender" value="F" />
       Tispe
     </label>
   </div>
@@ -130,24 +153,19 @@
   >
     <p>Fargevar:</p>
     <label>
-      <input type="radio" bind:group={newDog.color} name="color" value="Brun" />
+      <input type="radio" bind:group={dog.color} name="color" value="Brun" />
       Brun
     </label>
 
     <label>
-      <input
-        type="radio"
-        bind:group={newDog.color}
-        name="color"
-        value="Rødbrun"
-      />
+      <input type="radio" bind:group={dog.color} name="color" value="Rødbrun" />
       Rødbrun
     </label>
 
     <label>
       <input
         type="radio"
-        bind:group={newDog.color}
+        bind:group={dog.color}
         name="color"
         value="Lysebrun"
       />
@@ -159,8 +177,8 @@
     <Input
       type="text"
       title="Fars titler"
-      value={newDog.fatherTitles}
-      onChange={(newVal) => (newDog.fatherTitles = newVal)}
+      value={dog.fatherTitles}
+      onChange={(newVal) => (dog.fatherTitles = newVal)}
       width="8rem"
       error={errorFields.includes("fatherTitles")}
     />
@@ -168,16 +186,16 @@
     <Input
       type="text"
       title="Fars navn*"
-      value={newDog.fatherName}
-      onChange={(newVal) => (newDog.fatherName = newVal)}
+      value={dog.fatherName}
+      onChange={(newVal) => (dog.fatherName = newVal)}
       error={errorFields.includes("fatherName")}
     />
 
     <Input
       type="text"
       title="Fars ID"
-      value={newDog.fatherId}
-      onChange={(newVal) => (newDog.fatherId = newVal)}
+      value={dog.fatherId}
+      onChange={(newVal) => (dog.fatherId = newVal)}
       width="8rem"
       error={errorFields.includes("fatherId")}
     />
@@ -187,8 +205,8 @@
     <Input
       type="text"
       title="Mors titler"
-      value={newDog.motherTitles}
-      onChange={(newVal) => (newDog.motherTitles = newVal)}
+      value={dog.motherTitles}
+      onChange={(newVal) => (dog.motherTitles = newVal)}
       width="8rem"
       error={errorFields.includes("motherTitles")}
     />
@@ -196,16 +214,16 @@
     <Input
       type="text"
       title="Mors navn*"
-      value={newDog.motherName}
-      onChange={(newVal) => (newDog.motherName = newVal)}
+      value={dog.motherName}
+      onChange={(newVal) => (dog.motherName = newVal)}
       error={errorFields.includes("motherName")}
     />
 
     <Input
       type="text"
       title="Mors ID"
-      value={newDog.motherId}
-      onChange={(newVal) => (newDog.motherId = newVal)}
+      value={dog.motherId}
+      onChange={(newVal) => (dog.motherId = newVal)}
       width="8rem"
       error={errorFields.includes("motherId")}
     />
@@ -220,18 +238,35 @@
     />
   {/if}
 
-  <div class="horiz-flex-end">
-    <button on:click={onCancel}> Avbryt </button>
-    <button on:click={save}> Lagre </button>
-  </div>
+  {#if !isDeleting}
+    <div class="horiz-flex-end">
+      <button on:click={onCancel}> Avbryt </button>
+      {#if !isNewDog}
+        <button on:click={() => (isDeleting = true)}> Slett hund </button>
+      {/if}
+      <button on:click={save}> Lagre </button>
+    </div>
+  {:else}
+    <p
+      style="margin-bottom: 0.5rem; color: var(--errorColor); font-weight: bold;"
+    >
+      Er du sikker på at du vil slette hunden?
+    </p>
+
+    <div class="horiz-flex-end">
+      <button on:click={deleteDog}> Ja, slett </button>
+      <button on:click={() => (isDeleting = false)}> Nei, ikke slett </button>
+    </div>
+  {/if}
 </div>
 
 <style>
-  .newDogContainer {
+  .dog-container {
     width: fit-content;
     padding: 2rem;
     margin: 1rem 0;
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    background-color: white;
   }
   .horiz-wrap-flex {
     display: flex;
@@ -243,5 +278,15 @@
     flex-direction: row;
     flex-wrap: wrap;
     gap: 1rem;
+  }
+  .dog-modal {
+    max-width: 90%;
+    max-height: 90%;
+    z-index: 2;
+    box-sizing: border-box;
+    overflow: auto;
+  }
+  .dog-modal:hover {
+    cursor: default;
   }
 </style>

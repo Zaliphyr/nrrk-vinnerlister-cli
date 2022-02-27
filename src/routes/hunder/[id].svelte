@@ -78,7 +78,7 @@
     </a>
   {/if}
 
-  <h2>Antall premieringer totalt</h2>
+  <h2>Oppnådde premieringer</h2>
   {#if dogData?.awards?.length}
     <table>
       <thead>
