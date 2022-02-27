@@ -16,9 +16,13 @@
 </script>
 
 <script>
+  import NewDog from "$lib/newDog.svelte";
+
   export let dogList;
+
   let searchText = "";
   let dogBeingEdited = null;
+  let isAddingDog = false;
 
   $: filteredDogList = searchText
     ? dogList.filter(
@@ -34,6 +38,10 @@
 
   function saveEditedDog() {}
 
+  function onNewDogAdded(newDogData) {
+    isAddingDog = false;
+  }
+
   function containsCaseless(s1, s2) {
     return s1.toLowerCase().includes(s2.toLowerCase());
   }
@@ -43,9 +51,17 @@
 
 <a href="/admin/utstillinger" style="margin-top: 0.5rem;">Til utstillinger</a>
 
-<a href="/admin/hunder/ny">
-  <button style="margin-top: 1rem;">Ny hund</button>
-</a>
+{#if isAddingDog}
+  <NewDog onCancel={() => (isAddingDog = false)} onFinish={onNewDogAdded} />
+{:else}
+  <button
+    style="margin-top: 1rem;"
+    on:click={() => (isAddingDog = true)}
+    disabled={dogBeingEdited}
+  >
+    Ny hund
+  </button>
+{/if}
 
 <p style="margin-top: 1rem; font-size: 1rem;">Søk etter hund</p>
 <input type="text" bind:value={searchText} />
@@ -69,7 +85,10 @@
         <tr>
           <td>
             {#if !dogBeingEdited}
-              <button on:click={() => (dogBeingEdited = { ...dog })}>
+              <button
+                on:click={() => (dogBeingEdited = { ...dog })}
+                disabled={isAddingDog}
+              >
                 Rediger
               </button>
             {/if}
@@ -83,7 +102,9 @@
             {#if dog.id === editedId}
               <input type="text" bind:value={dogBeingEdited.name} />
             {:else}
-              <p>{dog.name}</p>
+              <a href={`/hunder/${dog.id}`}>
+                {dog.name}
+              </a>
             {/if}
           </td>
 
