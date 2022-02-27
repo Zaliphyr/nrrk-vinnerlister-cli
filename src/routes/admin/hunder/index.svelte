@@ -16,6 +16,8 @@
 </script>
 
 <script>
+  import InformationBox from "$lib/informationBox.svelte";
+  import Input from "$lib/input.svelte";
   import NewDog from "$lib/newDog.svelte";
 
   export let dogList;
@@ -23,6 +25,7 @@
   let searchText = "";
   let dogBeingEdited = null;
   let isAddingDog = false;
+  let newDogName = "";
 
   $: filteredDogList = searchText
     ? dogList.filter(
@@ -30,7 +33,8 @@
           containsCaseless(dog.name, searchText) ||
           containsCaseless(dog.motherName, searchText) ||
           containsCaseless(dog.fatherName, searchText) ||
-          containsCaseless(dog.titles, searchText)
+          containsCaseless(dog.titles, searchText) ||
+          containsCaseless(dog.nkkId, searchText)
       )
     : dogList;
 
@@ -38,8 +42,13 @@
 
   function saveEditedDog() {}
 
-  function onNewDogAdded(newDogData) {
+  async function onNewDogAdded(newDogData) {
     isAddingDog = false;
+    newDogName = newDogData.name;
+    const res = await fetch("/hunder.json");
+    if (res.ok) {
+      dogList = await res.json();
+    }
   }
 
   function containsCaseless(s1, s2) {
@@ -49,13 +58,15 @@
 
 <h1>Hunder - admin</h1>
 
-<a href="/admin/utstillinger" style="margin-top: 0.5rem;">Til utstillinger</a>
+<a href="/admin/utstillinger" style="margin-top: 0.5rem;"
+  >Til utstillinger-admin</a
+>
 
 {#if isAddingDog}
   <NewDog onCancel={() => (isAddingDog = false)} onFinish={onNewDogAdded} />
 {:else}
   <button
-    style="margin-top: 1rem;"
+    style="margin-top: 1.5rem;"
     on:click={() => (isAddingDog = true)}
     disabled={dogBeingEdited}
   >
@@ -63,8 +74,22 @@
   </button>
 {/if}
 
-<p style="margin-top: 1rem; font-size: 1rem;">Søk etter hund</p>
-<input type="text" bind:value={searchText} />
+{#if newDogName}
+  <InformationBox
+    variant="success"
+    margin="1rem 0"
+    text={`Hund ${newDogName} lagt til`}
+  />
+{/if}
+
+<Input
+  type="text"
+  title="Søk etter hund"
+  value={searchText}
+  onChange={(newVal) => (searchText = newVal)}
+  width="16rem"
+  margin="1.5rem 0 1rem 0"
+/>
 
 {#if filteredDogList}
   <table style="margin-top: 1rem;">
@@ -82,7 +107,7 @@
     </thead>
     <tbody>
       {#each filteredDogList as dog}
-        <tr>
+        <tr class={dog.name === newDogName ? "new-dog-row" : ""}>
           <td>
             {#if !dogBeingEdited}
               <button
@@ -182,5 +207,9 @@
   td,
   th {
     vertical-align: middle;
+  }
+
+  .new-dog-row {
+    background-color: var(--successColorMedium);
   }
 </style>

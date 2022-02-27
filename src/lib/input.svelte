@@ -4,8 +4,16 @@
   export let margin = "";
   export let title = "";
   export let onChange;
+  export let width;
+  export let error = false;
 
-  const style = margin ? `margin: ${margin}` : "";
+  let style = "";
+  if (margin) {
+    style += `margin: ${margin}; `;
+  }
+  if (width) {
+    style += `width: ${width}; `;
+  }
 
   const handleInput = (e) => {
     let newValue = type.match(/^(number|range)$/)
@@ -16,8 +24,14 @@
 </script>
 
 <div {style}>
-  <p class="title">{title}</p>
-  <input {type} {value} required on:input={handleInput} />
+  <p class={`title ${error ? "error-title" : ""}`}>{title}</p>
+  <input
+    {type}
+    {value}
+    required
+    on:input={handleInput}
+    class={error ? "error-input" : ""}
+  />
 </div>
 
 <style>
@@ -53,5 +67,13 @@
   input:valid {
     border-image: linear-gradient(to right, var(--maincolor), var(--maincolor))
       1;
+  }
+
+  .error-input {
+    background-color: var(--errorBgColor);
+  }
+  .error-title {
+    color: var(--errorColor);
+    font-weight: bold;
   }
 </style>

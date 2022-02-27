@@ -1,12 +1,24 @@
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;600&display=swap');
 
 :root {
-  --maincolor: #b8164e;
-  --maincolorFaded:  #e4b7c7;
+  --maincolor: #cd1174;
+  --maincolorFaded:  #e6bbd2;
+
+  --errorBgColor: #ffeeee;
+  --errorColor: #df0000;
+
+  --successBgColor: #efffef;
+  --successColorMedium: #c4f7c4;
+  --successColor: #0c8f0c;
+
+  --infoBgColor: #ebf8ff;
+  --infoColor: #003d89;
+  
 }
 
 body {
   background-color: #f9f9f9;
+  min-height: 100vh;
 }
 
 body, button, input, textarea, select, option {
@@ -15,6 +27,13 @@ body, button, input, textarea, select, option {
 
 table, button, a, input {
   width: fit-content;
+}
+
+table {
+  display: block;
+  overflow-x: auto;
+  white-space: nowrap;
+  max-width: 100%;
 }
 
 input, select {

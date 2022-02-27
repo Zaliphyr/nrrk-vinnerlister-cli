@@ -33,7 +33,7 @@
 
 <h1>Utstillinger - admin</h1>
 
-<a href="/admin/hunder" style="margin-top: 0.5rem;">Til hunder</a>
+<a href="/admin/hunder" style="margin-top: 0.5rem;">Til hund-admin</a>
 
 <a href="/admin/utstillinger/ny">
   <button style="margin-top: 1rem;">Ny utstilling</button>
