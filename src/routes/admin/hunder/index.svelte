@@ -76,51 +76,53 @@
   }
 </script>
 
-<h1>Hunder - admin</h1>
+<div style="margin: auto; display: flex; flex-direction: column;">
+  <h1>Hunder - admin</h1>
 
-<a href="/admin/utstillinger" style="margin-top: 0.5rem;"
-  >Til utstillinger-admin</a
->
-
-{#if isAddingDog}
-  <DogEditor
-    isNewDog
-    onCancel={() => (isAddingDog = false)}
-    onFinish={onNewDogAdded}
-    saveHttpMethod="POST"
-    saveUrl="/admin/hunder.json"
-  />
-{:else}
-  <button
-    style="margin-top: 1.5rem;"
-    on:click={() => (isAddingDog = true)}
-    disabled={dogBeingEdited}
+  <a href="/admin/utstillinger" style="margin-top: 0.5rem;"
+    >Til utstillinger-admin</a
   >
-    Ny hund
-  </button>
-{/if}
 
-{#if editedDogName || newDogName || deletedDogName}
-  <InformationBox
-    variant="success"
-    margin="1rem 0 0 0"
-    text={`Hund ${editedDogName || newDogName || deletedDogName} ${
-      editedDogName ? "oppdatert" : newDogName ? "lagt til" : "slettet"
-    }`}
+  {#if isAddingDog}
+    <DogEditor
+      isNewDog
+      onCancel={() => (isAddingDog = false)}
+      onFinish={onNewDogAdded}
+      saveHttpMethod="POST"
+      saveUrl="/admin/hunder.json"
+    />
+  {:else}
+    <button
+      style="margin-top: 1.5rem;"
+      on:click={() => (isAddingDog = true)}
+      disabled={dogBeingEdited}
+    >
+      Ny hund
+    </button>
+  {/if}
+
+  {#if editedDogName || newDogName || deletedDogName}
+    <InformationBox
+      variant="success"
+      margin="1rem 0 0 0"
+      text={`Hund ${editedDogName || newDogName || deletedDogName} ${
+        editedDogName ? "oppdatert" : newDogName ? "lagt til" : "slettet"
+      }`}
+    />
+  {/if}
+
+  <Input
+    type="text"
+    title="Søk etter hund"
+    value={searchText}
+    onChange={(newVal) => (searchText = newVal)}
+    width="16rem"
+    margin="1.5rem 0 1rem 0"
   />
-{/if}
-
-<Input
-  type="text"
-  title="Søk etter hund"
-  value={searchText}
-  onChange={(newVal) => (searchText = newVal)}
-  width="16rem"
-  margin="1.5rem 0 1rem 0"
-/>
+</div>
 
 {#if filteredDogList}
-  <table style="margin-top: 1rem;">
+  <table style="margin-top: 1rem; max-width: 100vw;">
     <thead>
       <tr>
         <th>Handling</th>
@@ -202,7 +204,7 @@
       onFinish={onDogUpdated}
       onDelete={onDogDeleted}
       saveUrl={`/admin/hunder/${dogBeingEdited.id}.json`}
-      saveHttpMethod="PATCH"
+      saveHttpMethod="PUT"
       isModal
     />
   </div>

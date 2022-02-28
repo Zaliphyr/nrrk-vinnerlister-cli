@@ -23,4 +23,8 @@
     padding: 1rem 2rem;
     font-size: 1.25rem;
   }
+
+  main {
+    max-width: none;
+  }
 </style>

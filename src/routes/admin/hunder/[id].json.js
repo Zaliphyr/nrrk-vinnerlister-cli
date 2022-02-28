@@ -1,8 +1,8 @@
 import { api } from '../../_api';
 
-export const patch = async ({ params, request }) => {
+export const put = async ({ params, request }) => {
   const body = await request.json();
-  const response = await api('PATCH', `dogs/${params.id}`, body);
+  const response = await api('PUT', `dogs/${params.id}`, body);
 
   if (response.status >= 400) {
     return response;
