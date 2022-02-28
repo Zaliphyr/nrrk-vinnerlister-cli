@@ -15,7 +15,6 @@
     nkkId: "",
     pedigreeDbLink: "",
     gender: "",
-    color: "",
     fatherTitles: "",
     fatherName: "",
     fatherId: "",
@@ -31,9 +30,10 @@
   const requiredFields = [
     { fieldName: "name", displayName: "Navn" },
     { fieldName: "gender", displayName: "Kjønn" },
-    { fieldName: "color", displayName: "Fargevar" },
     { fieldName: "fatherName", displayName: "Fars navn" },
     { fieldName: "motherName", displayName: "Mors navn" },
+    { fieldName: "fatherId", displayName: "Fars ID" },
+    { fieldName: "motherId", displayName: "Mors ID" },
   ];
 
   async function save() {
@@ -101,7 +101,7 @@
       title="Titler"
       value={dog.titles}
       onChange={(newVal) => (dog.titles = newVal)}
-      width="8rem"
+      width="12rem"
       error={errorFields.includes("titles")}
     />
 
@@ -110,6 +110,7 @@
       title="Navn*"
       value={dog.name}
       onChange={(newVal) => (dog.name = newVal)}
+      width="16rem"
       error={errorFields.includes("name")}
     />
 
@@ -147,39 +148,13 @@
     </label>
   </div>
 
-  <div
-    style="margin: 2rem 0; gap: 1rem; align-items: center;"
-    class="horiz-wrap-flex"
-  >
-    <p>Fargevar:</p>
-    <label>
-      <input type="radio" bind:group={dog.color} name="color" value="Brun" />
-      Brun
-    </label>
-
-    <label>
-      <input type="radio" bind:group={dog.color} name="color" value="Rødbrun" />
-      Rødbrun
-    </label>
-
-    <label>
-      <input
-        type="radio"
-        bind:group={dog.color}
-        name="color"
-        value="Lysebrun"
-      />
-      Lysebrun
-    </label>
-  </div>
-
   <div class="horiz-wrap-flex" style="gap: 1rem; margin: 2rem 0;">
     <Input
       type="text"
       title="Fars titler"
       value={dog.fatherTitles}
       onChange={(newVal) => (dog.fatherTitles = newVal)}
-      width="8rem"
+      width="12rem"
       error={errorFields.includes("fatherTitles")}
     />
 
@@ -188,12 +163,13 @@
       title="Fars navn*"
       value={dog.fatherName}
       onChange={(newVal) => (dog.fatherName = newVal)}
+      width="16rem"
       error={errorFields.includes("fatherName")}
     />
 
     <Input
       type="text"
-      title="Fars ID"
+      title="Fars ID*"
       value={dog.fatherId}
       onChange={(newVal) => (dog.fatherId = newVal)}
       width="8rem"
@@ -207,7 +183,7 @@
       title="Mors titler"
       value={dog.motherTitles}
       onChange={(newVal) => (dog.motherTitles = newVal)}
-      width="8rem"
+      width="12rem"
       error={errorFields.includes("motherTitles")}
     />
 
@@ -216,12 +192,13 @@
       title="Mors navn*"
       value={dog.motherName}
       onChange={(newVal) => (dog.motherName = newVal)}
+      width="16rem"
       error={errorFields.includes("motherName")}
     />
 
     <Input
       type="text"
-      title="Mors ID"
+      title="Mors ID*"
       value={dog.motherId}
       onChange={(newVal) => (dog.motherId = newVal)}
       width="8rem"
