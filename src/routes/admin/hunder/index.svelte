@@ -41,8 +41,6 @@
       )
     : dogList;
 
-  $: editedId = dogBeingEdited ? dogBeingEdited?.id : null;
-
   async function onNewDogAdded(newDogData) {
     resetSuccessMessagesAndFetchData();
     newDogName = newDogData.name;

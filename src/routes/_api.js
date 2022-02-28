@@ -14,7 +14,6 @@ export async function api(fetchMethod, resource, data) {
 		body: data && JSON.stringify(data)
 	});
 
-
 	if (res.headers.get('content-type') === 'text/plain') {
 		return {
 			status: res.status
