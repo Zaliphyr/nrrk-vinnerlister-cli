@@ -11,7 +11,7 @@
   export let isModal = false;
   export let contest = {
     name: "",
-    date: new Date().toISOString().substr(0, 10),
+    date: new Date().toISOString().substring(0, 10),
     numberOfDogs: 0,
     location: "",
     host: "",
