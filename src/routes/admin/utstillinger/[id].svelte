@@ -1,6 +1,4 @@
 <script context="module">
-  import { browser } from "$app/env";
-
   export const load = async ({ fetch, props, params }) => {
     const res = await fetch(`/utstillinger/${params.id}.json`);
 
@@ -19,8 +17,12 @@
 
 <script>
   import { page } from "$app/stores";
+  import AddResult from "$lib/addResult.svelte";
+  import InformationBox from "$lib/informationBox.svelte";
 
   export let contest;
+  let isAddingResult = false;
+  let addResultSuccessText = "";
 
   const contestId = $page.params.id;
 
@@ -29,6 +31,14 @@
     if (res.ok) {
       contest = await res.json();
     }
+  }
+
+  function onFinishAddingResults(numberOfNewRes) {
+    isAddingResult = false;
+    fetchContest();
+    addResultSuccessText = `La til ${numberOfNewRes} resultat${
+      numberOfNewRes > 1 ? "er" : ""
+    }`;
   }
 </script>
 
@@ -46,9 +56,29 @@
   <p>{contest.judge}</p>
 </div>
 
-<h2 style="margin-top: 2rem;">Resultater</h2>
+{#if addResultSuccessText}
+  <InformationBox
+    variant="success"
+    margin="1rem 0 0 0"
+    text={addResultSuccessText}
+  />
+{/if}
 
-<button style="margin: 1rem 0;"> Legg til resultat </button>
+{#if !isAddingResult}
+  <button style="margin-top: 2rem;" on:click={() => (isAddingResult = true)}>
+    Legg til resultat
+  </button>
+{:else}
+  <AddResult
+    alreadyTakenAwards={contest.results.map((res) => res.result)}
+    dogsWithResults={contest.results.map((res) => res.dogId)}
+    onCancel={() => (isAddingResult = false)}
+    onFinish={onFinishAddingResults}
+    {contestId}
+  />
+{/if}
+
+<h2 style="margin-top: 2rem;">Resultater</h2>
 
 {#if contest.results && contest.results.length}
   <table>
@@ -58,7 +88,8 @@
         <th>Resultat</th>
         <th>Poeng</th>
         <th>Poeng tot.</th>
-        <th>Kritikk</th>
+        <th>Kritikk-lenke</th>
+        <th>Handling</th>
       </tr>
     </thead>
     <tbody>
@@ -84,6 +115,10 @@
             {:else}
               -
             {/if}
+          </td>
+          <td>
+            <button on:click={() => alert("kommer snart")}>Rediger</button>
+            <button on:click={() => alert("kommer snart")}>Slett</button>
           </td>
         </tr>
       {/each}

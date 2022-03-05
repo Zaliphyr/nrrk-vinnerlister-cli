@@ -61,12 +61,12 @@
 <h1>BelloRosarios Rhodesian ridgeback vinnerlister</h1>
 
 <div class="year-nav">
-  <button on:click={() => setYear(year - 1)}> prev </button>
+  <button on:click={() => setYear(year - 1)}> forrige </button>
   <h2 style="width: 4.5rem; text-align: center;">
     {year}
   </h2>
   <button on:click={() => setYear(year + 1)} disabled={year >= todayYear}>
-    next
+    neste
   </button>
 </div>
 

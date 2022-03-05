@@ -96,7 +96,7 @@
     error={errorFields.includes("name")}
   />
 
-  <p>dato</p>
+  <p>dato, kommer her snart</p>
 
   <Input
     type="number"
