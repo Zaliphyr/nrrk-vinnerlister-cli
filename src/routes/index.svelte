@@ -89,4 +89,14 @@
     margin: auto;
     gap: 1rem;
   }
+  @media (max-width: 900px) {
+    h1 {
+      margin: 0.5rem 0 1.5rem 0;
+      font-size: 2rem;
+    }
+    .year-nav {
+      margin: 0;
+      margin-bottom: 1rem;
+    }
+  }
 </style>

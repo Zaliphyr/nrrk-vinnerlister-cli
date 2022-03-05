@@ -21,7 +21,7 @@
       {#each dogs as dog}
         <tr>
           <td>
-            <a href={`/hunder/${dog.dogId}`}>
+            <a href={`/hunder/${dog.dogId}`} style="white-space: pre-wrap;">
               {dog.dogName}
             </a>
           </td>
@@ -44,3 +44,9 @@
     {#if year} for {year}{/if}
   </p>
 {/if}
+
+<style>
+  td {
+    vertical-align: middle;
+  }
+</style>
