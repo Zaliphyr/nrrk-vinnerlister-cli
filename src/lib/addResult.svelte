@@ -1,25 +1,8 @@
 <script>
+  import { pointsByResult } from "../scores-and-points";
+
   import Input from "./input.svelte";
   import SearchableSelect from "./searchableSelect.svelte";
-
-  const pointsByResult = {
-    BIR: 20,
-    BIM: 18,
-    "2. BHK/BTK": 16,
-    "3. BHK/BTK": 14,
-    "4. BHK/BTK": 12,
-    "5. BHK/BTK": 10,
-    "6. BHK/BTK": 8,
-    "7. BHK/BTK": 6,
-    "8. BHK/BTK": 4,
-    "9. BHK/BTK": 2,
-    "10. BHK/BTK": 0,
-    CK: 5,
-    Excellent: 4,
-    "Very Good": 3,
-    Good: 2,
-    Sufficient: 1,
-  };
 
   const resultOptions = Object.entries(pointsByResult).map((pointResult) => ({
     value: pointResult[0],
@@ -159,5 +142,11 @@
     grid-template-columns: auto auto auto auto;
     row-gap: 1.5rem;
     column-gap: 1rem;
+  }
+
+  @media (max-width: 900px) {
+    .grid {
+      grid-template-columns: auto;
+    }
   }
 </style>

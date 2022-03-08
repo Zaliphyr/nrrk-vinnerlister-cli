@@ -25,9 +25,10 @@ export const del = async ({ params }) => {
   };
 }
 
-export const put = async ({ params, request }) => {
+export const patch = async ({ params, request }) => {
   const body = await request.json();
-  const response = await api('PUT', `contest-results/${params.id}`, body);
+  console.log(body)
+  const response = await api('PATCH', `contest-results/${params.id}`, body);
 
   if (response.status >= 400) {
     return response;

@@ -19,12 +19,16 @@
   import { page } from "$app/stores";
   import AddResult from "$lib/addResult.svelte";
   import InformationBox from "$lib/informationBox.svelte";
+  import Input from "$lib/input.svelte";
+  import { pointsByResult } from "../../../scores-and-points";
 
   export let contest;
   let isAddingResult = false;
   let addResultSuccessText = "";
   let resultBeingEdited = null;
   let resultBeingDeleted = null;
+
+  $: alreadyTakenAwards = contest.results.map((res) => res.result);
 
   const contestId = $page.params.id;
 
@@ -33,6 +37,14 @@
     if (res.ok) {
       contest = await res.json();
     }
+  }
+
+  function initiateEditResult(result) {
+    resultBeingEdited = {
+      id: result.resultId,
+      result: result.result,
+      critiqueLink: result.critiqueLink || "",
+    };
   }
 
   function onFinishAddingResults(numberOfNewRes) {
@@ -52,6 +64,28 @@
       fetchContest();
     }
   }
+
+  async function saveEditedResult() {
+    const res = await fetch(
+      `/admin/utstillinger/${resultBeingEdited.id}/results.json`,
+      {
+        method: "PATCH",
+        body: JSON.stringify({
+          critiqueLink: resultBeingEdited.critiqueLink,
+          result: resultBeingEdited.result,
+        }),
+      }
+    );
+    if (res.ok) {
+      resultBeingEdited = null;
+      fetchContest();
+    }
+  }
+
+  const resultOptions = Object.entries(pointsByResult).map((pointResult) => ({
+    value: pointResult[0],
+    text: `${pointResult[0]} (${pointResult[1]})`,
+  }));
 </script>
 
 <h1>Utstilling: {contest.name}</h1>
@@ -82,7 +116,7 @@
   </button>
 {:else}
   <AddResult
-    alreadyTakenAwards={contest.results.map((res) => res.result)}
+    {alreadyTakenAwards}
     dogsWithResults={contest.results.map((res) => res.dogId)}
     onCancel={() => (isAddingResult = false)}
     onFinish={onFinishAddingResults}
@@ -111,7 +145,26 @@
             <a href={`/hunder/${result.dogId}`}>{result.dogName}</a>
           </td>
           <td>
-            {result.result}
+            {#if resultBeingEdited?.id === result.resultId}
+              <select
+                style="height: fit-content;"
+                bind:value={resultBeingEdited.result}
+              >
+                <option selected value={null} />
+                {#each resultOptions as opt}
+                  <option
+                    value={opt.value}
+                    disabled={alreadyTakenAwards.some(
+                      (takenAwd) => opt.value === takenAwd
+                    )}
+                  >
+                    {opt.text}
+                  </option>
+                {/each}
+              </select>
+            {:else}
+              {result.result}
+            {/if}
           </td>
           <td>
             {result.pointsByAward}
@@ -120,7 +173,14 @@
             {result.pointsByAward + result.pointsByNumDogs}
           </td>
           <td>
-            {#if result.critiqueLink}
+            {#if resultBeingEdited?.id === result.resultId}
+              <Input
+                title="Kritikk-lenke"
+                value={resultBeingEdited.critiqueLink}
+                onChange={(newVal) => (resultBeingEdited.critiqueLink = newVal)}
+                width="24rem"
+              />
+            {:else if result.critiqueLink}
               <a href={result.critiqueLink} target="_blank">
                 {result.critiqueLink}
               </a>
@@ -130,19 +190,24 @@
           </td>
           <td>
             {#if !resultBeingDeleted && !resultBeingEdited}
-              <button on:click={() => alert("kommer snart")}>Rediger</button>
+              <button on:click={() => initiateEditResult(result)}>
+                Rediger
+              </button>
               <button on:click={() => (resultBeingDeleted = result)}>
                 Slett
               </button>
-            {:else if resultBeingDeleted && resultBeingDeleted.resultId === result.resultId}
+            {:else if resultBeingDeleted?.resultId === result.resultId}
               <button on:click={() => deleteResult(result.resultId)}>
                 Slett
               </button>
               <button on:click={() => (resultBeingDeleted = null)}>
                 Avbryt
               </button>
-            {:else if resultBeingEdited && resultBeingEdited.id === result.resultId}
-              <button>kommer</button>
+            {:else if resultBeingEdited?.id === result.resultId}
+              <button on:click={() => (resultBeingEdited = null)}>
+                Abvryt
+              </button>
+              <button on:click={saveEditedResult}> Lagre </button>
             {:else}
               <button disabled>Rediger</button>
               <button disabled>Slett </button>
@@ -163,5 +228,9 @@
     grid-template-columns: auto auto;
     gap: 0.5rem;
     width: fit-content;
+  }
+
+  td {
+    vertical-align: middle;
   }
 </style>
