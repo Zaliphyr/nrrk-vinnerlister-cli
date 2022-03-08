@@ -13,7 +13,6 @@ export const put = async ({ params, request }) => {
   };
 };
 
-
 export const del = async ({ params }) => {
   const response = await api('DELETE', `contests/${params.id}`);
 

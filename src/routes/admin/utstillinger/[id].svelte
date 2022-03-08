@@ -23,6 +23,8 @@
   export let contest;
   let isAddingResult = false;
   let addResultSuccessText = "";
+  let resultBeingEdited = null;
+  let resultBeingDeleted = null;
 
   const contestId = $page.params.id;
 
@@ -39,6 +41,16 @@
     addResultSuccessText = `La til ${numberOfNewRes} resultat${
       numberOfNewRes > 1 ? "er" : ""
     }`;
+  }
+
+  async function deleteResult(resultId) {
+    const res = await fetch(`/admin/utstillinger/${resultId}/results.json`, {
+      method: "DELETE",
+    });
+    if (res.ok) {
+      resultBeingDeleted = null;
+      fetchContest();
+    }
   }
 </script>
 
@@ -117,8 +129,24 @@
             {/if}
           </td>
           <td>
-            <button on:click={() => alert("kommer snart")}>Rediger</button>
-            <button on:click={() => alert("kommer snart")}>Slett</button>
+            {#if !resultBeingDeleted && !resultBeingEdited}
+              <button on:click={() => alert("kommer snart")}>Rediger</button>
+              <button on:click={() => (resultBeingDeleted = result)}>
+                Slett
+              </button>
+            {:else if resultBeingDeleted && resultBeingDeleted.resultId === result.resultId}
+              <button on:click={() => deleteResult(result.resultId)}>
+                Slett
+              </button>
+              <button on:click={() => (resultBeingDeleted = null)}>
+                Avbryt
+              </button>
+            {:else if resultBeingEdited && resultBeingEdited.id === result.resultId}
+              <button>kommer</button>
+            {:else}
+              <button disabled>Rediger</button>
+              <button disabled>Slett </button>
+            {/if}
           </td>
         </tr>
       {/each}

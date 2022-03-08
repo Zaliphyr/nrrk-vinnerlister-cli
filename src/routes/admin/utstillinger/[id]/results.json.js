@@ -2,8 +2,32 @@ import { api } from '../../../_api';
 
 export const post = async ({ params, request }) => {
   const body = await request.json();
-  console.log(params.id)
   const response = await api('POST', `contests/${params.id}/results`, body);
+
+  if (response.status >= 400) {
+    return response;
+  }
+
+  return {
+    status: 200,
+  };
+};
+
+export const del = async ({ params }) => {
+  const response = await api('DELETE', `contest-results/${params.id}`);
+
+  if (response.status >= 400) {
+    return response;
+  }
+
+  return {
+    status: 200,
+  };
+}
+
+export const put = async ({ params, request }) => {
+  const body = await request.json();
+  const response = await api('PUT', `contest-results/${params.id}`, body);
 
   if (response.status >= 400) {
     return response;
