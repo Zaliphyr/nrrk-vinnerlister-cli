@@ -60,6 +60,9 @@ button:hover:not(:disabled) {
   background-color: var(--maincolor);
   color: white;
 }
+button:disabled {
+  border-color: #bbb;
+}
 
 a {
   color: var(--maincolor);
@@ -76,8 +79,8 @@ tr {
   transition: box-shadow 80ms linear;
 }
 tbody>tr:hover {
-  /* background-color: #f3f3f3; */
-  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  background-color: #f0f0f0;
+  /* box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px; */
 }
 
 h1 {

@@ -58,7 +58,7 @@
   }
 </script>
 
-<h1>BelloRosarios Rhodesian ridgeback vinnerlister</h1>
+<h1>Rhodesian ridgeback vinnerlister</h1>
 
 <div class="year-nav">
   <button on:click={() => setYear(year - 1)}> forrige </button>
@@ -71,7 +71,15 @@
 </div>
 
 {#if winnerList}
-  <WinnerList dogs={winnerList.topList} {year} />
+  <p style="margin: 0.5rem 0">
+    Kun de fem beste resultater er inkludert pr. hund
+  </p>
+
+  <div class="winner-list-container">
+    <WinnerList dogs={winnerList.topList.male} {year} header="Vinnerliste hannhunder"/>
+  
+    <WinnerList dogs={winnerList.topList.female} {year} header="Vinnerliste tisper"/>
+  </div>
 
   <DogShowList {year} contests={winnerList.contests} />
 {:else}
@@ -79,6 +87,13 @@
 {/if}
 
 <style>
+  .winner-list-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 2rem;
+    margin: 2rem 0 1rem 0;
+  }
   h1 {
     margin: 1rem auto 2rem auto;
   }
@@ -90,8 +105,11 @@
     gap: 1rem;
   }
   @media (max-width: 900px) {
+    .winner-list-container {
+      margin-top: 0;
+    }
     h1 {
-      margin: 0.5rem 0 1.5rem 0;
+      margin: 1.5rem 0 1.5rem 0;
       font-size: 2rem;
     }
     .year-nav {
