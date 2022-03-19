@@ -3,7 +3,7 @@
     <a href="/">Hjem</a>
     <a href="/hunder">Hunder</a>
     <a href="/utstillinger">Utstillinger</a>
-    <a href="/admin">Admin</a>
+    <!-- <a href="/admin">Admin</a> -->
   </div>
 </nav>
 

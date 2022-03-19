@@ -24,3 +24,16 @@ export const del = async ({ params }) => {
     status: 200,
   };
 };
+
+export const patch = async ({ params, request }) => {
+  const body = await request.json();
+  const response = await api('PATCH', `contests/${params.id}`, body);
+
+  if (response.status >= 400) {
+    return response;
+  }
+
+  return {
+    status: 200,
+  };
+};

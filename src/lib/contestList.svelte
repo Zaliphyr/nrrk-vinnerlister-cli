@@ -39,6 +39,6 @@
       </tbody>
     </table>
   {:else}
-    <p style="margin: 0.5rem 0">Ingen utstillinger funnet for {year}</p>
+    <p style="margin: 0.5rem 0">Ingen utstillinger funnet {#if year}for {year}{/if}</p>
   {/if}
 </div>

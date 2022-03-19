@@ -96,7 +96,10 @@
     error={errorFields.includes("name")}
   />
 
-  <p>dato, kommer her snart</p>
+  <input
+    type="date"
+    bind:value={contest.date}
+  />
 
   <Input
     type="number"

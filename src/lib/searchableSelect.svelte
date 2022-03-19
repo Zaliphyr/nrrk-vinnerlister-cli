@@ -166,6 +166,7 @@
     border-bottom: 1px solid #ddd;
     width: 100%;
     border-radius: 0;
+    background-color: transparent;
 
     border-width: 0;
     border-style: hidden;
@@ -211,6 +212,6 @@
   }
 
   .highlighted-option {
-    background-color: red;
+    background-color: var(--maincolorFaded);
   }
 </style>

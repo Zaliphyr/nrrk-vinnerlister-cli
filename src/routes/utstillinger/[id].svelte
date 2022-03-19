@@ -75,7 +75,7 @@
         {/if}
       </div>
 
-      <h3>Utstillingsresultater</h3>
+      <h3>Premieringer</h3>
     {/if}
     
     <table>
