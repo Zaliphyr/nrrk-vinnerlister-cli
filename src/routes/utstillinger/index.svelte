@@ -22,4 +22,4 @@
 
 <h1>Alle utstillinger</h1>
 
-<ContestList {contests} />
+<ContestList {contests} marginTop="1rem"/>

@@ -4,6 +4,12 @@
 
     if (res.ok) {
       const contest = await res.json();
+      if (contest.maleCertDogRef) {
+        contest.maleCertDogRef = contest.maleCertDogRef['@ref'].id
+      }
+      if (contest.femaleCertDogRef) {
+        contest.femaleCertDogRef = contest.femaleCertDogRef['@ref'].id
+      }
       return {
         props: { contest },
       };
@@ -18,6 +24,15 @@
 
 <script>
   export let contest;
+
+  function getDogNameByDogId(dogId) {
+    for (let result of contest.results) {
+      if (result.dogId === dogId) {
+        console.log(result)
+        return result.dogName;
+      }
+    }
+  }
 </script>
 
 <h1>{contest.name}</h1>
@@ -32,52 +47,76 @@
   <p>{contest.judge}</p>
 </div>
 
-<h2>Resultater</h2>
-{#if contest.results?.length}
-  <p style="margin: 0.5rem 0">
-    {contest.pointsByNumDogs} tilleggspoeng fra antall deltagende hunder
-  </p>
-  <table>
-    <thead>
-      <tr>
-        <th>Hund</th>
-        <th>Resultat</th>
-        <th>Poeng</th>
-        <th>Kritikk</th>
-      </tr>
-    </thead>
-    <tbody>
-      {#each contest.results as result}
-        <tr>
-          <td>
-            <a href={`/hunder/${result.dogId}`}>
-              {result.dogName}
+<div class="shadow-box" style="max-width: 100%; margin-top: 1rem;">
+  <h2>Resultater</h2>
+  {#if contest.results?.length}
+    <p style="margin: 0.5rem 0">
+      {contest.pointsByNumDogs} tilleggspoeng fra antall deltagende hunder
+    </p>
+
+    {#if contest.maleCertDogRef || contest.femaleCertDogRef}
+      <div style="margin: 1rem 0 2rem 0;">
+        <h3>Cert</h3>
+        {#if contest.maleCertDogRef}
+          <p style="margin-top: 0.5rem;">
+            Hannhund: 
+            <a href={`/hunder/${contest.maleCertDogRef}`}>
+              {getDogNameByDogId(contest.maleCertDogRef)}
             </a>
-          </td>
-          <td>{result.result}</td>
-          <td>
-            {result.pointsByAward + result.pointsByNumDogs}
-            ({result.pointsByAward}+{result.pointsByNumDogs})
-          </td>
-          <td>
-            {#if result.critiqueLink}
-              <a href={result.critiqueLink} target="_blank">Se kritikk</a>
-            {/if}
-          </td>
+          </p>
+        {/if}
+        {#if contest.femaleCertDogRef}
+          <p style="margin-top: 0.5rem;">
+            Tispe: 
+            <a href={`/hunder/${contest.femaleCertDogRef}`}>
+              {getDogNameByDogId(contest.femaleCertDogRef)}
+            </a>
+          </p>
+        {/if}
+      </div>
+
+      <h3>Utstillingsresultater</h3>
+    {/if}
+    
+    <table>
+      <thead>
+        <tr>
+          <th>Hund</th>
+          <th>Resultat</th>
+          <th>Poeng</th>
+          <th>Kritikk</th>
         </tr>
-      {/each}
-    </tbody>
-  </table>
-{:else}
-  Ingen resultater enda
-{/if}
+      </thead>
+      <tbody>
+        {#each contest.results as result}
+          <tr>
+            <td>
+              <a href={`/hunder/${result.dogId}`}>
+                {result.dogName}
+              </a>
+            </td>
+            <td>{result.result}</td>
+            <td>
+              {result.pointsByAward + result.pointsByNumDogs}
+              ({result.pointsByAward}+{result.pointsByNumDogs})
+            </td>
+            <td>
+              {#if result.critiqueLink}
+                <a href={result.critiqueLink} target="_blank">Se kritikk</a>
+              {/if}
+            </td>
+          </tr>
+        {/each}
+      </tbody>
+    </table>
+  {:else}
+    Ingen resultater enda
+  {/if}
+</div>
 
 <style>
   h1 {
     margin-bottom: 1rem;
-  }
-  h2 {
-    margin-top: 2rem;
   }
   table,
   div {

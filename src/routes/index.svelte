@@ -20,7 +20,7 @@
 </script>
 
 <script>
-  import DogShowList from "$lib/contestList.svelte";
+  import ContestList from "$lib/contestList.svelte";
   import WinnerList from "$lib/winnerList.svelte";
 
   const todayYear = new Date().getFullYear();
@@ -71,17 +71,17 @@
 </div>
 
 {#if winnerList}
-  <p style="margin: 0.5rem 0">
-    Kun de fem beste resultater er inkludert pr. hund
-  </p>
-
   <div class="winner-list-container">
     <WinnerList dogs={winnerList.topList.male} {year} header="Vinnerliste hannhunder"/>
   
     <WinnerList dogs={winnerList.topList.female} {year} header="Vinnerliste tisper"/>
   </div>
+  
+  <p style="margin: 1.5rem 0 0 0">
+    Kun de fem beste resultater er inkludert per hund
+  </p>
 
-  <DogShowList {year} contests={winnerList.contests} />
+  <ContestList {year} contests={winnerList.contests} marginTop="2rem"/>
 {:else}
   <p>Henter data</p>
 {/if}

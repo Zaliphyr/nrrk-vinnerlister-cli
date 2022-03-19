@@ -67,91 +67,96 @@
   </div>
 </div>
 
-<h2>Oppnådde premieringer</h2>
-{#if dogData?.awards && dogData.awards.some((awd) => awd.count > 0)}
-  <table>
-    <thead>
-      <tr>
-        <th>Kval.</th>
-        <th>Poeng</th>
-        <th>Antall</th>
-      </tr>
-    </thead>
-    <tbody>
-      {#each dogData.awards.filter( (award) => (isShowingAllResults ? true : award.count > 0) ) as awardEntry}
+<div class="shadow-box">
+  <h2>Oppnådde premieringer</h2>
+  {#if dogData?.awards && dogData.awards.some((awd) => awd.count > 0)}
+    <table>
+      <thead>
         <tr>
-          <td>{awardEntry.awardName}</td>
-          <td>{awardEntry.points}</td>
-          <td>{awardEntry.count || "-"}</td>
+          <th>Kval.</th>
+          <th>Poeng</th>
+          <th>Antall</th>
         </tr>
-      {/each}
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        {#each dogData.awards.filter( (award) => (isShowingAllResults ? true : award.count > 0) ) as awardEntry}
+          <tr>
+            <td>{awardEntry.awardName}</td>
+            <td>{awardEntry.points}</td>
+            <td>{awardEntry.count || "-"}</td>
+          </tr>
+        {/each}
+      </tbody>
+    </table>
+  
+    <button on:click={() => (isShowingAllResults = !isShowingAllResults)}>
+      {#if isShowingAllResults}
+        Vis kun oppnådde premieringer
+      {:else}
+        Vis alle premieringer
+      {/if}
+    </button>
+  {:else}
+    <p style="margin-top: 0.5rem">Ingen premieringer enda</p>
+  {/if}
+</div>
 
-  <button on:click={() => (isShowingAllResults = !isShowingAllResults)}>
-    {#if isShowingAllResults}
-      Vis kun oppnådde premieringer
-    {:else}
-      Vis alle premieringer
-    {/if}
-  </button>
-{:else}
-  <p style="margin-top: 0.5rem">Ingen premieringer enda</p>
-{/if}
-
-<h2>Resultater</h2>
-{#if dogData?.contests?.length}
-  <table>
-    <thead>
-      <tr>
-        <th>Utstilling</th>
-        <th>Resultat</th>
-        <th>Poeng</th>
-        <th>Dato</th>
-        <th>Sted</th>
-        <th>Arrangør</th>
-        <th>Dommer</th>
-        <th>Kritikk</th>
-      </tr>
-    </thead>
-    <tbody>
-      {#each dogData.contests as contestEntry}
+<div class="shadow-box">
+  <h2>Resultater</h2>
+  {#if dogData?.contests?.length}
+    <table>
+      <thead>
         <tr>
-          <td>
-            <a href={`/utstillinger/${contestEntry.contestId}`}>
-              {contestEntry.contestName}
-            </a>
-          </td>
-          <td>{contestEntry.result}</td>
-          <td>
-            {contestEntry.pointsByResult + contestEntry.pointsByNumDogs}
-            ({contestEntry.pointsByResult}+{contestEntry.pointsByNumDogs})
-          </td>
-          <td>{contestEntry.contestDate}</td>
-          <td>{contestEntry.contestLocation}</td>
-          <td>{contestEntry.contestHost}</td>
-          <td>{contestEntry.contestJudge}</td>
-          <td>
-            {#if contestEntry.critiqueLink}
-              <a href={contestEntry.critiqueLink} target="_blank">
-                Se kritikk
+          <th>Utstilling</th>
+          <th>Resultat</th>
+          <th>Poeng</th>
+          <th>Dato</th>
+          <th>Sted</th>
+          <th>Arrangør</th>
+          <th>Dommer</th>
+          <th>Kritikk</th>
+        </tr>
+      </thead>
+      <tbody>
+        {#each dogData.contests as contestEntry}
+          <tr>
+            <td>
+              <a href={`/utstillinger/${contestEntry.contestId}`}>
+                {contestEntry.contestName}
               </a>
-            {/if}
-          </td>
-        </tr>
-      {/each}
-    </tbody>
-  </table>
-{:else}
-  Ingen resultater enda
-{/if}
+            </td>
+            <td>{contestEntry.result}</td>
+            <td>
+              {contestEntry.pointsByResult + contestEntry.pointsByNumDogs}
+              ({contestEntry.pointsByResult}+{contestEntry.pointsByNumDogs})
+            </td>
+            <td>{contestEntry.contestDate}</td>
+            <td>{contestEntry.contestLocation}</td>
+            <td>{contestEntry.contestHost}</td>
+            <td>{contestEntry.contestJudge}</td>
+            <td>
+              {#if contestEntry.critiqueLink}
+                <a href={contestEntry.critiqueLink} target="_blank">
+                  Se kritikk
+                </a>
+              {/if}
+            </td>
+          </tr>
+        {/each}
+      </tbody>
+    </table>
+  {:else}
+    Ingen resultater enda
+  {/if}
+</div>
 
 <style>
+  .shadow-box {
+    margin-top: 2rem;
+  }
+
   h1 {
     margin-bottom: 1rem;
-  }
-  h2 {
-    margin-top: 2rem;
   }
   button {
     margin-top: 0.5rem;

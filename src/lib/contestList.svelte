@@ -1,9 +1,10 @@
 <script>
   export let year = null;
   export let contests;
+  export let marginTop='0';
 </script>
 
-<div style="margin-top: 2rem;">
+<div class="shadow-box" style={`margin-top: ${marginTop};`}>
   {#if year}
     <h2>Utstillinger</h2>
   {/if}

@@ -4,8 +4,8 @@
   export let header = 'Vinnerliste';
 </script>
 
-<div>
-  <h2 style="margin-top: 1rem;">{header}</h2>
+<div class="shadow-box">
+  <h2>{header}</h2>
 
   {#if dogs.length}
     <table>
