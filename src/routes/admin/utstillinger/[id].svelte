@@ -5,10 +5,10 @@
     if (res.ok) {
       const contest = await res.json();
       if (contest.maleCertDogRef) {
-        contest.maleCertDogRef = contest.maleCertDogRef['@ref'].id
+        contest.maleCertDogRef = contest.maleCertDogRef["@ref"].id;
       }
       if (contest.femaleCertDogRef) {
-        contest.femaleCertDogRef = contest.femaleCertDogRef['@ref'].id
+        contest.femaleCertDogRef = contest.femaleCertDogRef["@ref"].id;
       }
       return {
         props: { contest },
@@ -40,17 +40,16 @@
   let isAddingFemaleCert = false;
   let newFemaleCertDogId = null;
 
-  
   let allMaleDogOptions = contest?.results
-    ? contest.results.filter(resDog => resDog.dogGender === 'M')
-      .map(resDog => ({text: resDog.dogName, value: resDog.dogId}))
+    ? contest.results
+        .filter((resDog) => resDog.dogGender === "M")
+        .map((resDog) => ({ text: resDog.dogName, value: resDog.dogId }))
     : [];
   let allFemaleDogOptions = contest?.results
-    ? contest.results.filter(resDog => resDog.dogGender === 'F')
-      .map(resDog => ({text: resDog.dogName, value: resDog.dogId}))
+    ? contest.results
+        .filter((resDog) => resDog.dogGender === "F")
+        .map((resDog) => ({ text: resDog.dogName, value: resDog.dogId }))
     : [];
-
-  $: alreadyTakenAwards = contest.results.map((res) => res.result);
 
   const contestId = $page.params.id;
 
@@ -105,21 +104,18 @@
   }
 
   async function removeCert(gender) {
-    setCert(gender, false, null)
+    setCert(gender, false, null);
   }
 
   async function setCert(dogGender, isCert, dogId) {
-    const res = await fetch(
-      `/admin/utstillinger/${contestId}.json`,
-      {
-        method: "PATCH",
-        body: JSON.stringify({
-          dogGender,
-          isCert,
-          dogId,
-        }),
-      }
-    );
+    const res = await fetch(`/admin/utstillinger/${contestId}.json`, {
+      method: "PATCH",
+      body: JSON.stringify({
+        dogGender,
+        isCert,
+        dogId,
+      }),
+    });
     if (res.ok) {
       newMaleCertDogId = null;
       newFemaleCertDogId = null;
@@ -132,7 +128,7 @@
   function getDogNameByDogId(dogId) {
     for (let result of contest.results) {
       if (result.dogId === dogId) {
-        console.log(result)
+        console.log(result);
         return result.dogName;
       }
     }
@@ -172,7 +168,6 @@
   </button>
 {:else}
   <AddResult
-    {alreadyTakenAwards}
     dogsWithResults={contest.results.map((res) => res.dogId)}
     onCancel={() => (isAddingResult = false)}
     onFinish={onFinishAddingResults}
@@ -204,20 +199,24 @@
         width="24rem"
         title="Hund"
       />
-      <button disabled={!newMaleCertDogId} on:click={() => setCert('M', true, newMaleCertDogId.value)}>
+      <button
+        disabled={!newMaleCertDogId}
+        on:click={() => setCert("M", true, newMaleCertDogId.value)}
+      >
         Lagre
       </button>
     </div>
+  {:else if contest.maleCertDogRef}
+    <button on:click={() => removeCert("M")} disabled={isAddingFemaleCert}>
+      Fjern
+    </button>
   {:else}
-    {#if contest.maleCertDogRef}
-      <button on:click={() => removeCert('M')} disabled={isAddingFemaleCert}>
-        Fjern
-      </button>
-    {:else}
-      <button on:click={() => isAddingMaleCert = true} disabled={isAddingFemaleCert}>
-        Legg til
-      </button>
-    {/if}
+    <button
+      on:click={() => (isAddingMaleCert = true)}
+      disabled={isAddingFemaleCert}
+    >
+      Legg til
+    </button>
   {/if}
 
   <p>Tispe</p>
@@ -240,22 +239,25 @@
         width="24rem"
         title="Hund"
       />
-      <button disabled={!newFemaleCertDogId} on:click={() => setCert('F', true, newFemaleCertDogId.value)}>
+      <button
+        disabled={!newFemaleCertDogId}
+        on:click={() => setCert("F", true, newFemaleCertDogId.value)}
+      >
         Lagre
       </button>
     </div>
+  {:else if contest.femaleCertDogRef}
+    <button on:click={() => removeCert("F")} disabled={isAddingMaleCert}>
+      Fjern
+    </button>
   {:else}
-    {#if contest.femaleCertDogRef}
-      <button on:click={() => removeCert('F')} disabled={isAddingMaleCert}>
-        Fjern
-      </button>
-    {:else}
-      <button on:click={() => isAddingFemaleCert = true} disabled={isAddingMaleCert}>
-        Legg til
-      </button>
-    {/if}
+    <button
+      on:click={() => (isAddingFemaleCert = true)}
+      disabled={isAddingMaleCert}
+    >
+      Legg til
+    </button>
   {/if}
-
 </div>
 
 <h3 style="margin-top: 2rem;">Premieringer</h3>
@@ -285,12 +287,7 @@
               >
                 <option selected value={null} />
                 {#each resultOptions as opt}
-                  <option
-                    value={opt.value}
-                    disabled={alreadyTakenAwards.some(
-                      (takenAwd) => opt.value === takenAwd
-                    )}
-                  >
+                  <option value={opt.value}>
                     {opt.text}
                   </option>
                 {/each}
@@ -382,7 +379,7 @@
     align-items: flex-end;
     gap: 1rem;
   }
-  .search-and-submit-box>button {
+  .search-and-submit-box > button {
     height: fit-content;
   }
 </style>

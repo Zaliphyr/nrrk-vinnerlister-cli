@@ -11,7 +11,6 @@
 
   const emptyResult = { dog: null, result: null, critiqueLink: "" };
 
-  export let alreadyTakenAwards = [];
   export let dogsWithResults = [];
   export let onCancel;
   export let onFinish;
@@ -83,12 +82,7 @@
       <select style="height: fit-content;" bind:value={result.result}>
         <option selected value={null} />
         {#each resultOptions as opt}
-          <option
-            value={opt.value}
-            disabled={newResults.some(
-              (nr, resIndex) => nr.result === opt.value && i !== resIndex
-            ) || alreadyTakenAwards.some((takenAwd) => opt.value === takenAwd)}
-          >
+          <option value={opt.value}>
             {opt.text}
           </option>
         {/each}
