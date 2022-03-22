@@ -17,7 +17,7 @@ export const get = async (event) => {
 
   for (let resultObj of response.body.results) {
     const pointsByAward = getPointsByResult(resultObj.result);
-    const pointsByNumDogs = getPointsByNumDogs(resultObj.contestNumberOfDogs);
+    const pointsByNumDogs = getPointsByNumDogs(resultObj.contestNumberOfDogs, resultObj.result);
     dogContests.push({
       ...resultObj,
       pointsByResult: pointsByAward,

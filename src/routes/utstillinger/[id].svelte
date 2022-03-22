@@ -5,10 +5,10 @@
     if (res.ok) {
       const contest = await res.json();
       if (contest.maleCertDogRef) {
-        contest.maleCertDogRef = contest.maleCertDogRef['@ref'].id
+        contest.maleCertDogRef = contest.maleCertDogRef["@ref"].id;
       }
       if (contest.femaleCertDogRef) {
-        contest.femaleCertDogRef = contest.femaleCertDogRef['@ref'].id
+        contest.femaleCertDogRef = contest.femaleCertDogRef["@ref"].id;
       }
       return {
         props: { contest },
@@ -28,7 +28,6 @@
   function getDogNameByDogId(dogId) {
     for (let result of contest.results) {
       if (result.dogId === dogId) {
-        console.log(result)
         return result.dogName;
       }
     }
@@ -51,7 +50,7 @@
   <h2>Resultater</h2>
   {#if contest.results?.length}
     <p style="margin: 0.5rem 0">
-      {contest.pointsByNumDogs} tilleggspoeng fra antall deltagende hunder
+      {contest.pointsByNumDogs} tilleggspoeng fra antall deltagende hunder for toppresultater
     </p>
 
     {#if contest.maleCertDogRef || contest.femaleCertDogRef}
@@ -59,7 +58,7 @@
         <h3>Cert</h3>
         {#if contest.maleCertDogRef}
           <p style="margin-top: 0.5rem;">
-            Hannhund: 
+            Hannhund:
             <a href={`/hunder/${contest.maleCertDogRef}`}>
               {getDogNameByDogId(contest.maleCertDogRef)}
             </a>
@@ -67,7 +66,7 @@
         {/if}
         {#if contest.femaleCertDogRef}
           <p style="margin-top: 0.5rem;">
-            Tispe: 
+            Tispe:
             <a href={`/hunder/${contest.femaleCertDogRef}`}>
               {getDogNameByDogId(contest.femaleCertDogRef)}
             </a>
@@ -77,7 +76,7 @@
 
       <h3>Premieringer</h3>
     {/if}
-    
+
     <table>
       <thead>
         <tr>
@@ -98,7 +97,9 @@
             <td>{result.result}</td>
             <td>
               {result.pointsByAward + result.pointsByNumDogs}
-              ({result.pointsByAward}+{result.pointsByNumDogs})
+              {#if result.pointsByNumDogs > 0}
+                ({result.pointsByAward}+{result.pointsByNumDogs})
+              {/if}
             </td>
             <td>
               {#if result.critiqueLink}

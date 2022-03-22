@@ -14,7 +14,7 @@ export const get = async (event) => {
   const mappedResults = response.body.results.map(resultObj => ({
     ...resultObj,
     pointsByAward: getPointsByResult(resultObj.result),
-    pointsByNumDogs,
+    pointsByNumDogs: getPointsByNumDogs(response.body.contest.numberOfDogs, resultObj.result),
   }));
 
   return {
