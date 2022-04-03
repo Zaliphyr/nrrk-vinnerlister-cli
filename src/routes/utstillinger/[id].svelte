@@ -83,7 +83,6 @@
           <th>Hund</th>
           <th>Resultat</th>
           <th>Poeng</th>
-          <th>Kritikk</th>
         </tr>
       </thead>
       <tbody>
@@ -99,11 +98,6 @@
               {result.pointsByAward + result.pointsByNumDogs}
               {#if result.pointsByNumDogs > 0}
                 ({result.pointsByAward}+{result.pointsByNumDogs})
-              {/if}
-            </td>
-            <td>
-              {#if result.critiqueLink}
-                <a href={result.critiqueLink} target="_blank">Se kritikk</a>
               {/if}
             </td>
           </tr>

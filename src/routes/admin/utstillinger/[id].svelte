@@ -269,7 +269,6 @@
         <th>Resultat</th>
         <th>Poeng</th>
         <th>Poeng tot.</th>
-        <th>Kritikk-lenke</th>
         <th>Handling</th>
       </tr>
     </thead>
@@ -301,22 +300,6 @@
           </td>
           <td>
             {result.pointsByAward + result.pointsByNumDogs}
-          </td>
-          <td>
-            {#if resultBeingEdited?.id === result.resultId}
-              <Input
-                title="Kritikk-lenke"
-                value={resultBeingEdited.critiqueLink}
-                onChange={(newVal) => (resultBeingEdited.critiqueLink = newVal)}
-                width="24rem"
-              />
-            {:else if result.critiqueLink}
-              <a href={result.critiqueLink} target="_blank">
-                {result.critiqueLink}
-              </a>
-            {:else}
-              -
-            {/if}
           </td>
           <td>
             {#if !resultBeingDeleted && !resultBeingEdited}

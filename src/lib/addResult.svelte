@@ -88,13 +88,6 @@
         {/each}
       </select>
 
-      <Input
-        title="Kritikk-lenke"
-        value={result.critiqueLink}
-        onChange={(newVal) => (result.critiqueLink = newVal)}
-        width="24rem"
-      />
-
       {#if newResults.length > 1}
         <button
           on:click={() =>

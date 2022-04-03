@@ -88,7 +88,7 @@
         {/each}
       </tbody>
     </table>
-  
+
     <button on:click={() => (isShowingAllResults = !isShowingAllResults)}>
       {#if isShowingAllResults}
         Vis kun oppnådde premieringer
@@ -114,7 +114,6 @@
           <th>Sted</th>
           <th>Arrangør</th>
           <th>Dommer</th>
-          <th>Kritikk</th>
         </tr>
       </thead>
       <tbody>
@@ -134,13 +133,6 @@
             <td>{contestEntry.contestLocation}</td>
             <td>{contestEntry.contestHost}</td>
             <td>{contestEntry.contestJudge}</td>
-            <td>
-              {#if contestEntry.critiqueLink}
-                <a href={contestEntry.critiqueLink} target="_blank">
-                  Se kritikk
-                </a>
-              {/if}
-            </td>
           </tr>
         {/each}
       </tbody>
