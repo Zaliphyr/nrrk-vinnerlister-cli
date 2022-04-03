@@ -25,9 +25,11 @@
   import { page } from "$app/stores";
   import AddResult from "$lib/addResult.svelte";
   import InformationBox from "$lib/informationBox.svelte";
-  import Input from "$lib/input.svelte";
   import SearchableSelect from "$lib/searchableSelect.svelte";
-  import { pointsByResult } from "../../../scores-and-points";
+  import {
+    awardsWithNumDogPoitns,
+    simpleAwards,
+  } from "../../../scores-and-points";
 
   export let contest;
   let isAddingResult = false;
@@ -64,7 +66,8 @@
     resultBeingEdited = {
       id: result.resultId,
       result: result.result,
-      critiqueLink: result.critiqueLink || "",
+      placement: result.placement,
+      ck: result.ck,
     };
   }
 
@@ -92,8 +95,9 @@
       {
         method: "PATCH",
         body: JSON.stringify({
-          critiqueLink: resultBeingEdited.critiqueLink,
           result: resultBeingEdited.result,
+          placement: resultBeingEdited.placement,
+          ck: resultBeingEdited.ck,
         }),
       }
     );
@@ -134,9 +138,14 @@
     }
   }
 
-  const resultOptions = Object.entries(pointsByResult).map((pointResult) => ({
-    value: pointResult[0],
-    text: `${pointResult[0]} (${pointResult[1]})`,
+  const simpleResultOptions = simpleAwards.map((award) => ({
+    value: award,
+    text: award,
+  }));
+
+  const placementResultOptions = awardsWithNumDogPoitns.map((award) => ({
+    value: award,
+    text: award,
   }));
 </script>
 
@@ -267,8 +276,9 @@
       <tr>
         <th>Hund</th>
         <th>Resultat</th>
+        <th>Plassering</th>
+        <th>CK</th>
         <th>Poeng</th>
-        <th>Poeng tot.</th>
         <th>Handling</th>
       </tr>
     </thead>
@@ -285,21 +295,49 @@
                 bind:value={resultBeingEdited.result}
               >
                 <option selected value={null} />
-                {#each resultOptions as opt}
+                {#each simpleResultOptions as opt}
                   <option value={opt.value}>
                     {opt.text}
                   </option>
                 {/each}
               </select>
             {:else}
-              {result.result}
+              {result.result || "-"}
             {/if}
           </td>
           <td>
-            {result.pointsByAward}
+            {#if resultBeingEdited?.id === result.resultId}
+              <select
+                style="height: fit-content;"
+                bind:value={resultBeingEdited.placement}
+              >
+                <option selected value={null} />
+                {#each placementResultOptions as opt}
+                  <option value={opt.value}>
+                    {opt.text}
+                  </option>
+                {/each}
+              </select>
+            {:else}
+              {result.placement || "-"}
+            {/if}
           </td>
           <td>
-            {result.pointsByAward + result.pointsByNumDogs}
+            {#if resultBeingEdited?.id === result.resultId}
+              <label for={`ckBox-${result.resultId}`}>
+                <input
+                  type="checkbox"
+                  id={`ckBox-${result.resultId}`}
+                  bind:checked={resultBeingEdited.ck}
+                />
+                CK
+              </label>
+            {:else}
+              {result.ck ? "Ja" : "-"}
+            {/if}
+          </td>
+          <td>
+            {result.points}
           </td>
           <td>
             {#if !resultBeingDeleted && !resultBeingEdited}

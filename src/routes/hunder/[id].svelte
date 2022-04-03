@@ -124,11 +124,8 @@
                 {contestEntry.contestName}
               </a>
             </td>
-            <td>{contestEntry.result}</td>
-            <td>
-              {contestEntry.pointsByResult + contestEntry.pointsByNumDogs}
-              ({contestEntry.pointsByResult}+{contestEntry.pointsByNumDogs})
-            </td>
+            <td>{contestEntry.combinedResult}</td>
+            <td>{contestEntry.points}</td>
             <td>{contestEntry.contestDate}</td>
             <td>{contestEntry.contestLocation}</td>
             <td>{contestEntry.contestHost}</td>

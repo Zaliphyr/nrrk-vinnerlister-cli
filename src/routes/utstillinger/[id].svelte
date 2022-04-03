@@ -93,13 +93,8 @@
                 {result.dogName}
               </a>
             </td>
-            <td>{result.result}</td>
-            <td>
-              {result.pointsByAward + result.pointsByNumDogs}
-              {#if result.pointsByNumDogs > 0}
-                ({result.pointsByAward}+{result.pointsByNumDogs})
-              {/if}
-            </td>
+            <td>{result.combinedResult}</td>
+            <td>{result.points}</td>
           </tr>
         {/each}
       </tbody>

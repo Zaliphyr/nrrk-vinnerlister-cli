@@ -1,4 +1,4 @@
-import { getPointsByNumDogs, getPointsByResult } from '../../scores-and-points';
+import { calculateScore, combineResults, getPointsByNumDogs } from '../../scores-and-points';
 import { api } from '../_api';
 
 export const get = async (event) => {
@@ -13,8 +13,8 @@ export const get = async (event) => {
 
   const mappedResults = response.body.results.map(resultObj => ({
     ...resultObj,
-    pointsByAward: getPointsByResult(resultObj.result),
-    pointsByNumDogs: getPointsByNumDogs(response.body.contest.numberOfDogs, resultObj.result),
+    points: calculateScore(resultObj.result, resultObj.placement, resultObj.ck, response.body.contest.numberOfDogs),
+    combinedResult: combineResults(resultObj.result, resultObj.placement, resultObj.ck),
   }));
 
   return {
@@ -23,7 +23,7 @@ export const get = async (event) => {
       ...response.body.contest,
       pointsByNumDogs,
       results: mappedResults.sort((r1, r2) =>
-        r1.pointsByAward + r1.pointsByNumDogs > r2.pointsByAward + r2.pointsByNumDogs ? -1 : 1
+        r1.points > r2.points ? -1 : 1
       ),
     }
   };

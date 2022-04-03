@@ -1,4 +1,4 @@
-import { getPointsByNumDogs, getPointsByResult, pointsByResult } from '../../scores-and-points';
+import { calculateScore, combineResults, pointsByResult } from '../../scores-and-points';
 import { api } from '../_api';
 
 export const get = async (event) => {
@@ -16,20 +16,33 @@ export const get = async (event) => {
   const dogContests = [];
 
   for (let resultObj of response.body.results) {
-    const pointsByAward = getPointsByResult(resultObj.result);
-    const pointsByNumDogs = getPointsByNumDogs(resultObj.contestNumberOfDogs, resultObj.result);
     dogContests.push({
       ...resultObj,
-      pointsByResult: pointsByAward,
-      pointsByNumDogs,
+      points: calculateScore(resultObj.result, resultObj.placement, resultObj.ck, resultObj.contestNumberOfDogs),
+      combinedResult: combineResults(resultObj.result, resultObj.placement, resultObj.ck),
     });
 
-    let resultIndex = dogResultCounts.findIndex(resCount => resCount.awardName === resultObj.result);
-    if (resultIndex === -1) {
-      dogResultCounts.push({ awardName: resultObj.result, count: 1, points: 0 })
-    } else {
-      dogResultCounts[resultIndex].count += 1
-    }
+    ['result', 'placement', 'ck'].forEach(resultType => {
+      if (!resultObj[resultType]) { return; }
+
+      let resultIndex;
+      let awardName;
+
+      if (resultType === 'ck') {
+        resultIndex = dogResultCounts.findIndex(resCount => resCount.awardName === 'CK');
+        awardName = 'CK';
+      }
+      else {
+        resultIndex = dogResultCounts.findIndex(resCount => resCount.awardName === resultObj[resultType]);
+        awardName = resultObj[resultType];
+      }
+
+      if (resultIndex === -1) {
+        dogResultCounts.push({ awardName: awardName, count: 1, points: 0 })
+      } else {
+        dogResultCounts[resultIndex].count += 1
+      }
+    })
   }
 
   return {

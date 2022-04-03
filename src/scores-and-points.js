@@ -31,14 +31,29 @@ export const awardsWithNumDogPoitns = [
   '10. BHK/BTK',
 ]
 
-export function getPointsByResult(result) {
-  return pointsByResult[result] || 0
+export const simpleAwards = [
+  'Excellent',
+  'Very Good',
+  'Good',
+  'Sufficient',
+]
+
+export function calculateScore(result, placement, ck, numDogs) {
+  let score = 0;
+  if (ck) {
+    score += 5;
+  }
+  if (result) {
+    score += pointsByResult[result] || 0;
+  }
+  if (placement) {
+    score += pointsByResult[placement] + getPointsByNumDogs(numDogs);
+  }
+  console.log(result, placement, ck, numDogs, score)
+  return score;
 }
 
-export function getPointsByNumDogs(numDogs, result) {
-  if (result && !awardsWithNumDogPoitns.includes(result)) {
-    return 0;
-  }
+export function getPointsByNumDogs(numDogs) {
   if (numDogs <= 5) { return 0 }
   if (numDogs <= 10) { return 2 }
   if (numDogs <= 15) { return 4 }
@@ -50,4 +65,19 @@ export function getPointsByNumDogs(numDogs, result) {
   if (numDogs <= 45) { return 16 }
   if (numDogs <= 50) { return 18 }
   return 20
+}
+
+export function combineResults(result, placement, ck) {
+  let resultStrings = [];
+  if (placement) {
+    resultStrings.push(placement)
+  }
+  if (result) {
+    resultStrings.push(result)
+  }
+  if (ck) {
+    resultStrings.push('CK')
+  }
+  console.log(resultStrings)
+  return resultStrings.join(', ')
 }
