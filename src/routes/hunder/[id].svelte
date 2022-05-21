@@ -19,7 +19,7 @@
 <script>
   export let dogData;
 
-  import { page } from "$app/stores";
+  import { page } from '$app/stores';
   const id = $page.params.id;
 
   let isShowingAllResults = false;
@@ -42,13 +42,9 @@
     <p>ID:</p>
     <p>{dogData.dog.nkkId}</p>
     <p>Kjønn:</p>
-    <p>{dogData.dog.gender === "M" ? "Hannhund" : "Tispe"}</p>
+    <p>{dogData.dog.gender === 'M' ? 'Hannhund' : 'Tispe'}</p>
     {#if dogData.dog.pedigreeDbLink}
-      <a
-        href={dogData.dog.pedigreeDbLink}
-        target="_blank"
-        style="grid-column: span 2"
-      >
+      <a href={dogData.dog.pedigreeDbLink} target="_blank" style="grid-column: span 2">
         Se i pedigree-database
       </a>
     {/if}
@@ -83,7 +79,7 @@
           <tr>
             <td>{awardEntry.awardName}</td>
             <td>{awardEntry.points}</td>
-            <td>{awardEntry.count || "-"}</td>
+            <td>{awardEntry.count || '-'}</td>
           </tr>
         {/each}
       </tbody>
@@ -152,12 +148,19 @@
   }
 
   .info-column-container {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 2rem;
-    max-width: 40rem;
+    display: grid;
+    grid-template-columns: auto auto auto;
+    gap: 3rem;
     justify-content: space-between;
+  }
+
+  @media (max-width: 900px) {
+    .info-column-container {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
   }
 
   .info-column-two-col {

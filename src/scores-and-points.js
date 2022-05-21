@@ -15,7 +15,7 @@ export const pointsByResult = {
   'Very Good': 3,
   Good: 2,
   Sufficient: 1,
-}
+};
 
 export const awardsWithNumDogPoitns = [
   'BIR',
@@ -29,14 +29,9 @@ export const awardsWithNumDogPoitns = [
   '8. BHK/BTK',
   '9. BHK/BTK',
   '10. BHK/BTK',
-]
+];
 
-export const simpleAwards = [
-  'Excellent',
-  'Very Good',
-  'Good',
-  'Sufficient',
-]
+export const simpleAwards = ['Excellent', 'Very Good', 'Good', 'Sufficient'];
 
 export function calculateScore(result, placement, ck, numDogs) {
   let score = 0;
@@ -49,35 +44,55 @@ export function calculateScore(result, placement, ck, numDogs) {
   if (placement) {
     score += pointsByResult[placement] + getPointsByNumDogs(numDogs);
   }
-  console.log(result, placement, ck, numDogs, score)
+  console.log(result, placement, ck, numDogs, score);
   return score;
 }
 
 export function getPointsByNumDogs(numDogs) {
-  if (numDogs <= 5) { return 0 }
-  if (numDogs <= 10) { return 2 }
-  if (numDogs <= 15) { return 4 }
-  if (numDogs <= 20) { return 6 }
-  if (numDogs <= 25) { return 8 }
-  if (numDogs <= 30) { return 10 }
-  if (numDogs <= 35) { return 12 }
-  if (numDogs <= 40) { return 14 }
-  if (numDogs <= 45) { return 16 }
-  if (numDogs <= 50) { return 18 }
-  return 20
+  if (numDogs <= 5) {
+    return 0;
+  }
+  if (numDogs <= 10) {
+    return 2;
+  }
+  if (numDogs <= 15) {
+    return 4;
+  }
+  if (numDogs <= 20) {
+    return 6;
+  }
+  if (numDogs <= 25) {
+    return 8;
+  }
+  if (numDogs <= 30) {
+    return 10;
+  }
+  if (numDogs <= 35) {
+    return 12;
+  }
+  if (numDogs <= 40) {
+    return 14;
+  }
+  if (numDogs <= 45) {
+    return 16;
+  }
+  if (numDogs <= 50) {
+    return 18;
+  }
+  return 20;
 }
 
 export function combineResults(result, placement, ck) {
   let resultStrings = [];
   if (placement) {
-    resultStrings.push(placement)
+    resultStrings.push(placement);
   }
   if (result) {
-    resultStrings.push(result)
+    resultStrings.push(result);
   }
   if (ck) {
-    resultStrings.push('CK')
+    resultStrings.push('CK');
   }
-  console.log(resultStrings)
-  return resultStrings.join(', ')
+
+  return resultStrings.join(', ');
 }

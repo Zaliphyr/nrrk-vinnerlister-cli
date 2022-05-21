@@ -20,8 +20,8 @@
 </script>
 
 <script>
-  import ContestList from "$lib/contestList.svelte";
-  import WinnerList from "$lib/winnerList.svelte";
+  import ContestList from '$lib/contestList.svelte';
+  import WinnerList from '$lib/winnerList.svelte';
 
   const todayYear = new Date().getFullYear();
   let year = todayYear;
@@ -65,33 +65,28 @@
   <h2 style="width: 4.5rem; text-align: center;">
     {year}
   </h2>
-  <button on:click={() => setYear(year + 1)} disabled={year >= todayYear}>
-    neste
-  </button>
+  <button on:click={() => setYear(year + 1)} disabled={year >= todayYear}> neste </button>
 </div>
 
 {#if winnerList}
   <div class="winner-list-container">
-    <WinnerList dogs={winnerList.topList.male} {year} header="Vinnerliste hannhunder"/>
-  
-    <WinnerList dogs={winnerList.topList.female} {year} header="Vinnerliste tisper"/>
-  </div>
-  
-  <p style="margin: 1.5rem 0 0 0">
-    Kun de fem beste resultater er inkludert per hund
-  </p>
+    <WinnerList dogs={winnerList.topList.male} {year} header="Vinnerliste hannhunder" />
 
-  <ContestList {year} contests={winnerList.contests} marginTop="2rem"/>
+    <WinnerList dogs={winnerList.topList.female} {year} header="Vinnerliste tisper" />
+  </div>
+
+  <p style="margin: 1.5rem 0 0 0">Kun de seks beste resultater er inkludert per hund</p>
+
+  <ContestList {year} contests={winnerList.contests} marginTop="2rem" />
 {:else}
   <p>Henter data</p>
 {/if}
 
 <style>
   .winner-list-container {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
     margin: 2rem 0 1rem 0;
   }
   h1 {
@@ -107,6 +102,10 @@
   @media (max-width: 900px) {
     .winner-list-container {
       margin-top: 0;
+      grid-template-columns: auto;
+      margin-left: auto;
+      margin-right: auto;
+      width: fit-content;
     }
     h1 {
       margin: 1.5rem 0 1.5rem 0;

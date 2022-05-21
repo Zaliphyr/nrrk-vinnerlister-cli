@@ -4,7 +4,7 @@
   export let header = 'Vinnerliste';
 </script>
 
-<div class="shadow-box">
+<div class="shadow-box" style="max-width: 90vw;">
   <h2>{header}</h2>
 
   {#if dogs.length}
@@ -27,7 +27,7 @@
             <td>
               {dog.pointsSum}
               {#if dog.points.length > 1}
-                ({dog.points.join("+")})
+                <p style="font-size: 0.8rem;">({dog.points.join('+')})</p>
               {/if}
             </td>
             <td>
