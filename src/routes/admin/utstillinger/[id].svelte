@@ -132,7 +132,6 @@
   function getDogNameByDogId(dogId) {
     for (let result of contest.results) {
       if (result.dogId === dogId) {
-        console.log(result);
         return result.dogName;
       }
     }

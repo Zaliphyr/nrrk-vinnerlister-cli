@@ -35,7 +35,6 @@
     }
     if (newYear in resultsByYear) {
       winnerList = resultsByYear[newYear];
-      console.log(winnerList);
     } else {
       winnerList = null;
       const newWinnerList = await getYearData(newYear);
