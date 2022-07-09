@@ -10,6 +10,12 @@
       if (contest.femaleCertDogRef) {
         contest.femaleCertDogRef = contest.femaleCertDogRef["@ref"].id;
       }
+      if (contest.maleNordCertDogRef) {
+        contest.maleNordCertDogRef = contest.maleNordCertDogRef["@ref"].id;
+      }
+      if (contest.femaleNordCertDogRef) {
+        contest.femaleNordCertDogRef = contest.femaleNordCertDogRef["@ref"].id;
+      }
       return {
         props: { contest },
       };
@@ -53,26 +59,50 @@
       {contest.pointsByNumDogs} tilleggspoeng fra antall deltagende hunder for toppresultater
     </p>
 
-    {#if contest.maleCertDogRef || contest.femaleCertDogRef}
-      <div style="margin: 1rem 0 2rem 0;">
-        <h3>Cert</h3>
-        {#if contest.maleCertDogRef}
-          <p style="margin-top: 0.5rem;">
-            Hannhund:
-            <a href={`/hunder/${contest.maleCertDogRef}`}>
-              {getDogNameByDogId(contest.maleCertDogRef)}
-            </a>
-          </p>
-        {/if}
-        {#if contest.femaleCertDogRef}
-          <p style="margin-top: 0.5rem;">
-            Tispe:
-            <a href={`/hunder/${contest.femaleCertDogRef}`}>
-              {getDogNameByDogId(contest.femaleCertDogRef)}
-            </a>
-          </p>
-        {/if}
-      </div>
+    {#if contest.maleCertDogRef || contest.femaleCertDogRef || contest.maleNordCertDogRef || contest.femaleNordCertDogRef}
+      {#if contest.maleCertDogRef || contest.femaleCertDogRef}
+        <div style="margin: 1rem 0 2rem 0;">
+          <h3>Cert</h3>
+          {#if contest.maleCertDogRef}
+            <p style="margin-top: 0.5rem;">
+              Hannhund:
+              <a href={`/hunder/${contest.maleCertDogRef}`}>
+                {getDogNameByDogId(contest.maleCertDogRef)}
+              </a>
+            </p>
+          {/if}
+          {#if contest.femaleCertDogRef}
+            <p style="margin-top: 0.5rem;">
+              Tispe:
+              <a href={`/hunder/${contest.femaleCertDogRef}`}>
+                {getDogNameByDogId(contest.femaleCertDogRef)}
+              </a>
+            </p>
+          {/if}
+        </div>
+      {/if}
+
+      {#if contest.maleNordCertDogRef || contest.femaleNordCertDogRef}
+        <div style="margin: 1rem 0 2rem 0;">
+          <h3>Nord cert</h3>
+          {#if contest.maleNordCertDogRef}
+            <p style="margin-top: 0.5rem;">
+              Hannhund:
+              <a href={`/hunder/${contest.maleNordCertDogRef}`}>
+                {getDogNameByDogId(contest.maleNordCertDogRef)}
+              </a>
+            </p>
+          {/if}
+          {#if contest.femaleNordCertDogRef}
+            <p style="margin-top: 0.5rem;">
+              Tispe:
+              <a href={`/hunder/${contest.femaleNordCertDogRef}`}>
+                {getDogNameByDogId(contest.femaleNordCertDogRef)}
+              </a>
+            </p>
+          {/if}
+        </div>
+      {/if}
 
       <h3>Premieringer</h3>
     {/if}
