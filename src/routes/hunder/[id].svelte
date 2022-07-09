@@ -63,7 +63,7 @@
   </div>
 </div>
 
-<div class="shadow-box">
+<div class="shadow-box" style="width: fit-content;">
   <h2>Oppnådde premieringer</h2>
   {#if dogData?.awards && dogData.awards.some((awd) => awd.count > 0)}
     <table>
