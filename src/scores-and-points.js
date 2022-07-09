@@ -15,6 +15,9 @@ export const pointsByResult = {
   "Very Good": 3,
   Good: 2,
   Sufficient: 1,
+  DQ: 0,
+  IM: 0,
+  0: 0,
 };
 
 export const awardsWithNumDogPoitns = [
@@ -31,7 +34,15 @@ export const awardsWithNumDogPoitns = [
   "10. BHK/BTK",
 ];
 
-export const simpleAwards = ["Excellent", "Very Good", "Good", "Sufficient"];
+export const simpleAwards = [
+  "Excellent",
+  "Very Good",
+  "Good",
+  "Sufficient",
+  "DQ",
+  "IM",
+  "0",
+];
 
 export function calculateScore(result, placement, ck, numDogs) {
   let score = 0;
