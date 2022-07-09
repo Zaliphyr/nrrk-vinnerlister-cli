@@ -12,6 +12,11 @@ export const get = async (event) => {
     return response;
   }
 
+  let dogCerts = {
+    normal: 0,
+    nord: 0,
+  };
+
   let dogResultCounts = Object.entries(pointsByResult).map((awardAndPoint) => ({
     awardName: awardAndPoint[0],
     count: 0,
@@ -42,6 +47,23 @@ export const get = async (event) => {
         resultObj.ck
       ),
     });
+
+    ["contestMaleCertDogRef", "contestFemaleCertDogRef"].forEach((cert) => {
+      if (resultObj[cert]) {
+        if (resultObj[cert]["@ref"].id === event.params.id) {
+          dogCerts.normal++;
+        }
+      }
+    });
+    ["contestMaleNordCertDogRef", "contestFemaleNordCertDogRef"].forEach(
+      (cert) => {
+        if (resultObj[cert]) {
+          if (resultObj[cert]["@ref"].id === event.params.id) {
+            dogCerts.nord++;
+          }
+        }
+      }
+    );
 
     ["result", "placement", "ck"].forEach((resultType) => {
       if (!resultObj[resultType]) {
@@ -79,6 +101,7 @@ export const get = async (event) => {
         c1.contestDate > c2.contestDate ? -1 : 1
       ),
       awards: dogResultCounts,
+      certs: dogCerts,
     },
   };
 };

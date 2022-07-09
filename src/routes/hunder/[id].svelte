@@ -65,6 +65,12 @@
 
 <div class="shadow-box" style="width: fit-content;">
   <h2>Oppnådde premieringer</h2>
+
+  <div style="margin: 0.75rem 0.5rem 0.5rem 0.5rem">
+    <p style="margin-bottom: 0.25rem">Cert: {dogData.certs.normal}</p>
+    <p>Nord cert: {dogData.certs.nord}</p>
+  </div>
+
   {#if dogData?.awards && dogData.awards.some((awd) => awd.count > 0)}
     <table>
       <thead>
