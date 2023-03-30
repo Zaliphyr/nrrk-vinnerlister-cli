@@ -17,6 +17,8 @@ export const pointsByResult = {
   Sufficient: 1,
   DQ: 0,
   IM: 0,
+  KIP: 0,
+  KBJ: 0,
   0: 0,
 };
 
@@ -41,6 +43,8 @@ export const simpleAwards = [
   "Sufficient",
   "DQ",
   "IM",
+  "KIP",
+  "KBJ",
   "0",
 ];
 
