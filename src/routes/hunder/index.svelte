@@ -4,8 +4,17 @@
 
     if (res.ok) {
       const dogList = await res.json();
+      const sortedDogList = dogList.sort((a, b) => {
+        if (a.name < b.name) {
+          return -1;
+        }
+        if (a.name > b.name) {
+          return 1;
+        }
+        return 0;
+      });
       return {
-        props: { dogList },
+        props: { dogList: sortedDogList },
       };
     }
 
@@ -26,8 +35,6 @@
     <thead>
       <tr>
         <th>Hund</th>
-        <th>Ant. resultater</th>
-        <th>Nyeste resultat</th>
       </tr>
     </thead>
     <tbody>
@@ -38,10 +45,6 @@
               {dog.name}
             </a>
           </td>
-          <td>Kommer</td>
-          <td>Kommer</td>
-          <!-- <td>{dog.numberOfResults}</td>
-          <td>{dog.lastResultDate}</td> -->
         </tr>
       {/each}
     </tbody>
