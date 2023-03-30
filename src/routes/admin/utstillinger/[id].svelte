@@ -16,6 +16,22 @@
       if (contest.femaleNordCertDogRef) {
         contest.femaleNordCertDogRef = contest.femaleNordCertDogRef["@ref"].id;
       }
+      if (contest.maleJuniorCertDogRef) {
+        contest.maleJuniorCertDogRef =
+          contest.maleJuniorCertDogRef["@ref"].id;
+      }
+      if (contest.femaleJuniorCertDogRef) {
+        contest.femaleJuniorCertDogRef =
+          contest.femaleJuniorCertDogRef["@ref"].id;
+      }
+      if (contest.maleVeteranCertDogRef) {
+        contest.maleVeteranCertDogRef =
+          contest.maleVeteranCertDogRef["@ref"].id;
+      }
+      if (contest.femaleVeteranCertDogRef) {
+        contest.femaleVeteranCertDogRef =
+          contest.femaleVeteranCertDogRef["@ref"].id;
+      }
       return {
         props: { contest },
       };
@@ -43,6 +59,7 @@
   let resultBeingEdited = null;
   let resultBeingDeleted = null;
 
+  // todo this is getting ridiculous but i'm laze
   let isAddingMaleCert = false;
   let newMaleCertDogId = null;
   let isAddingFemaleCert = false;
@@ -51,6 +68,14 @@
   let newMaleNordCertDogId = null;
   let isAddingFemaleNordCert = false;
   let newFemaleNordCertDogId = null;
+  let isAddingMaleJuniorCert = false;
+  let newMaleJuniorCertDogId = null;
+  let isAddingFemaleJuniorCert = false;
+  let newFemaleJuniorCertDogId = null;
+  let isAddingMaleVeteranCert = false;
+  let newMaleVeteranCertDogId = null;
+  let isAddingFemaleVeteranCert = false;
+  let newFemaleVeteranCertDogId = null;
 
   let allMaleDogOptions = contest?.results
     ? contest.results
@@ -136,10 +161,18 @@
       newFemaleCertDogId = null;
       newMaleNordCertDogId = null;
       newFemaleNordCertDogId = null;
+      newMaleJuniorCertDogId = null;
+      newFemaleJuniorCertDogId = null;
+      newMaleVeteranCertDogId = null;
+      newFemaleVeteranCertDogId = null;
       isAddingFemaleCert = false;
       isAddingMaleCert = false;
       isAddingFemaleNordCert = false;
       isAddingMaleNordCert = false;
+      isAddingFemaleJuniorCert = false;
+      isAddingMaleJuniorCert = false;
+      isAddingFemaleVeteranCert = false;
+      isAddingMaleVeteranCert = false;
       fetchContest();
     }
   }
@@ -365,6 +398,173 @@
     </button>
   {/if}
 </div>
+
+<h3 style="margin-top: 1rem;">Junior cert</h3>
+<div class="cert-container">
+  <p>Hannhund</p>
+  <p>
+    {#if contest.maleJuniorCertDogRef}
+      <a href={`/hunder/${contest.maleJuniorCertDogRef}`}>
+        {getDogNameByDogId(contest.maleJuniorCertDogRef)}
+      </a>
+    {:else}
+      Ingen
+    {/if}
+  </p>
+
+  {#if isAddingMaleJuniorCert}
+    <div class="search-and-submit-box">
+      <SearchableSelect
+        options={allMaleDogOptions}
+        value={newMaleJuniorCertDogId}
+        onChange={(dog) => (newMaleJuniorCertDogId = dog)}
+        width="24rem"
+        title="Hund"
+      />
+      <button
+        disabled={!newMaleJuniorCertDogId}
+        on:click={() => setCert("M", "junior", true, newMaleJuniorCertDogId.value)}
+      >
+        Lagre
+      </button>
+    </div>
+  {:else if contest.maleJuniorCertDogRef}
+    <button on:click={() => removeCert("M", "junior")} disabled={isAddingFemaleJuniorCert}>
+      Fjern
+    </button>
+  {:else}
+    <button
+      on:click={() => (isAddingMaleJuniorCert = true)}
+      disabled={isAddingFemaleJuniorCert}
+    >
+      Legg til
+    </button>
+  {/if}
+
+  <p>Tispe</p>
+  <p>
+    {#if contest.femaleJuniorCertDogRef}
+      <a href={`/hunder/${contest.femaleJuniorCertDogRef}`}>
+        {getDogNameByDogId(contest.femaleJuniorCertDogRef)}
+      </a>
+    {:else}
+      Ingen
+    {/if}
+  </p>
+
+  {#if isAddingFemaleJuniorCert}
+    <div class="search-and-submit-box">
+      <SearchableSelect
+        options={allFemaleDogOptions}
+        value={newFemaleJuniorCertDogId}
+        onChange={(dog) => (newFemaleJuniorCertDogId = dog)}
+        width="24rem"
+        title="Hund"
+      />
+      <button
+        disabled={!newFemaleJuniorCertDogId}
+        on:click={() => setCert("F", "junior", true, newFemaleJuniorCertDogId.value)}
+      >
+        Lagre
+      </button>
+    </div>
+  {:else if contest.femaleJuniorCertDogRef}
+    <button on:click={() => removeCert("F", "junior")} disabled={isAddingMaleJuniorCert}>
+      Fjern
+    </button>
+  {:else}
+    <button
+      on:click={() => (isAddingFemaleJuniorCert = true)}
+      disabled={isAddingMaleJuniorCert}
+    >
+      Legg til
+    </button>
+  {/if}
+</div>
+
+<h3 style="margin-top: 1rem;">Veteran cert</h3>
+<div class="cert-container">
+  <p>Hannhund</p>
+  <p>
+    {#if contest.maleVeteranCertDogRef}
+      <a href={`/hunder/${contest.maleVeteranCertDogRef}`}>
+        {getDogNameByDogId(contest.maleVeteranCertDogRef)}
+      </a>
+    {:else}
+      Ingen
+    {/if}
+  </p>
+
+  {#if isAddingMaleVeteranCert}
+    <div class="search-and-submit-box">
+      <SearchableSelect
+        options={allMaleDogOptions}
+        value={newMaleVeteranCertDogId}
+        onChange={(dog) => (newMaleVeteranCertDogId = dog)}
+        width="24rem"
+        title="Hund"
+      />
+      <button
+        disabled={!newMaleVeteranCertDogId}
+        on:click={() => setCert("M", "veteran", true, newMaleVeteranCertDogId.value)}
+      >
+        Lagre
+      </button>
+    </div>
+  {:else if contest.maleVeteranCertDogRef}
+    <button on:click={() => removeCert("M", "veteran")} disabled={isAddingFemaleVeteranCert}>
+      Fjern
+    </button>
+  {:else}
+    <button
+      on:click={() => (isAddingMaleVeteranCert = true)}
+      disabled={isAddingFemaleVeteranCert}
+    >
+      Legg til
+    </button>
+  {/if}
+
+  <p>Tispe</p>
+  <p>
+    {#if contest.femaleVeteranCertDogRef}
+      <a href={`/hunder/${contest.femaleVeteranCertDogRef}`}>
+        {getDogNameByDogId(contest.femaleVeteranCertDogRef)}
+      </a>
+    {:else}
+      Ingen
+    {/if}
+  </p>
+
+  {#if isAddingFemaleVeteranCert}
+    <div class="search-and-submit-box">
+      <SearchableSelect
+        options={allFemaleDogOptions}
+        value={newFemaleVeteranCertDogId}
+        onChange={(dog) => (newFemaleVeteranCertDogId = dog)}
+        width="24rem"
+        title="Hund"
+      />
+      <button
+        disabled={!newFemaleVeteranCertDogId}
+        on:click={() => setCert("F", "veteran", true, newFemaleVeteranCertDogId.value)}
+      >
+        Lagre
+      </button>
+    </div>
+  {:else if contest.femaleVeteranCertDogRef}
+    <button on:click={() => removeCert("F", "veteran")} disabled={isAddingMaleVeteranCert}>
+      Fjern
+    </button>
+  {:else}
+    <button
+      on:click={() => (isAddingFemaleVeteranCert = true)}
+      disabled={isAddingMaleVeteranCert}
+    >
+      Legg til
+    </button>
+  {/if}
+</div>
+
 
 <h3 style="margin-top: 2rem;">Premieringer</h3>
 {#if contest.results && contest.results.length}

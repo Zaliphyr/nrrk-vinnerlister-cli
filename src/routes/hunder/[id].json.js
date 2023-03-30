@@ -15,6 +15,8 @@ export const get = async (event) => {
   let dogCerts = {
     normal: 0,
     nord: 0,
+    junior: 0,
+    veteran: 0,
   };
 
   let dogResultCounts = Object.entries(pointsByResult).map((awardAndPoint) => ({
@@ -60,6 +62,24 @@ export const get = async (event) => {
         if (resultObj[cert]) {
           if (resultObj[cert]["@ref"].id === event.params.id) {
             dogCerts.nord++;
+          }
+        }
+      }
+    );
+    ["contestMaleJuniorCertDogRef", "contestFemaleJuniorCertDogRef"].forEach(
+      (cert) => {
+        if (resultObj[cert]) {
+          if (resultObj[cert]["@ref"].id === event.params.id) {
+            dogCerts.junior++;
+          }
+        }
+      }
+    );
+    ["contestMaleVeteranCertDogRef", "contestFemaleVeteranCertDogRef"].forEach(
+      (cert) => {
+        if (resultObj[cert]) {
+          if (resultObj[cert]["@ref"].id === event.params.id) {
+            dogCerts.veteran++;
           }
         }
       }

@@ -66,13 +66,25 @@
 <div class="shadow-box" style="width: fit-content;">
   <h2>Oppnådde premieringer</h2>
 
-  <div style="margin: 0.75rem 0.5rem 0.5rem 0.5rem">
-    <p style="margin-bottom: 0.25rem">Cert: {dogData.certs.normal}</p>
+  {#if dogData.certs.normal || dogData.certs.nord || dogData.certs.junior || dogData.certs.veteran}
+  <div style="margin: 0.75rem 0.5rem 0.5rem 0.5rem; display: flex; flex-direction: column; gap: 0.25rem;">
+    {#if dogData.certs.normal}
+    <p>Cert: {dogData.certs.normal}</p>
+    {/if}
+    {#if dogData.certs.nord}
     <p>Nord cert: {dogData.certs.nord}</p>
+    {/if}
+    {#if dogData.certs.junior}
+    <p>Junior cert: {dogData.certs.junior}</p>
+    {/if}
+    {#if dogData.certs.veteran}
+    <p>Veteran cert: {dogData.certs.veteran}</p>
+    {/if}
   </div>
+  {/if}
 
   {#if dogData?.awards && dogData.awards.some((awd) => awd.count > 0)}
-    <table>
+    <table style="margin-top: 0.5rem;">
       <thead>
         <tr>
           <th>Kval.</th>
