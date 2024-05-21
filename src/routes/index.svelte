@@ -68,9 +68,8 @@
 </div>
 
 {#if winnerList}
-  <div class="winner-list-container">
+  <div class="winner-list-container scrollable">
     <WinnerList dogs={winnerList.topList.male} {year} header="Vinnerliste hannhunder" />
-
     <WinnerList dogs={winnerList.topList.female} {year} header="Vinnerliste tisper" />
   </div>
 
@@ -88,9 +87,16 @@
     gap: 1.5rem;
     margin: 2rem 0 1rem 0;
   }
+
+  .scrollable {
+    max-height: 600px;
+    overflow-y: auto;
+  }
+
   h1 {
     margin: 1rem auto 2rem auto;
   }
+
   .year-nav {
     display: flex;
     flex-direction: row;
@@ -98,6 +104,7 @@
     margin: auto;
     gap: 1rem;
   }
+
   @media (max-width: 900px) {
     .winner-list-container {
       margin-top: 0;
@@ -106,10 +113,12 @@
       margin-right: auto;
       width: fit-content;
     }
+
     h1 {
       margin: 1.5rem 0 1.5rem 0;
       font-size: 2rem;
     }
+
     .year-nav {
       margin: 0;
       margin-bottom: 1rem;
