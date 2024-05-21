@@ -17,7 +17,6 @@
 
 <script>
   import ContestEditor from "$lib/contestEditor.svelte";
-
   import InformationBox from "$lib/informationBox.svelte";
   import Input from "$lib/input.svelte";
 
@@ -31,11 +30,30 @@
   let editedContestName = "";
   let deletedContestName = "";
 
+  let sortKey = 'name';
+  let sortDirection = 'asc';
+
   $: filteredContestList = searchText
     ? contestList.filter((contest) =>
         containsCaseless(contest.name, searchText)
       )
     : contestList;
+
+  $: sortedContestList = filteredContestList.slice().sort((a, b) => {
+    let modifier = sortDirection === 'asc' ? 1 : -1;
+    if (a[sortKey] < b[sortKey]) return -1 * modifier;
+    if (a[sortKey] > b[sortKey]) return 1 * modifier;
+    return 0;
+  });
+
+  function sortBy(key) {
+    if (sortKey === key) {
+      sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      sortKey = key;
+      sortDirection = 'asc';
+    }
+  }
 
   async function onNewContestAdded(newContestData) {
     resetSuccessMessagesAndFetchData();
@@ -119,22 +137,22 @@
   />
 </div>
 
-{#if filteredContestList}
+{#if sortedContestList}
   <table style="margin-top: 1rem;">
     <thead>
       <tr>
         <th />
         <th />
-        <th>Navn</th>
-        <th>Dato</th>
-        <th>Hunder</th>
-        <th>Sted</th>
-        <th>Vert</th>
-        <th>Dommer</th>
+        <th on:click={() => sortBy('name')}>Navn {sortKey === 'name' ? (sortDirection === 'asc' ? '▲' : '▼') : ''}</th>
+        <th on:click={() => sortBy('date')}>Dato {sortKey === 'date' ? (sortDirection === 'asc' ? '▲' : '▼') : ''}</th>
+        <th on:click={() => sortBy('numberOfDogs')}>Hunder {sortKey === 'numberOfDogs' ? (sortDirection === 'asc' ? '▲' : '▼') : ''}</th>
+        <th on:click={() => sortBy('location')}>Sted {sortKey === 'location' ? (sortDirection === 'asc' ? '▲' : '▼') : ''}</th>
+        <th on:click={() => sortBy('host')}>Vert {sortKey === 'host' ? (sortDirection === 'asc' ? '▲' : '▼') : ''}</th>
+        <th on:click={() => sortBy('judge')}>Dommer {sortKey === 'judge' ? (sortDirection === 'asc' ? '▲' : '▼') : ''}</th>
       </tr>
     </thead>
     <tbody>
-      {#each filteredContestList as contest}
+      {#each sortedContestList as contest}
         <tr
           class={contest.name === newContestName ||
           contest.name === editedContestName
@@ -206,6 +224,7 @@
   td,
   th {
     vertical-align: middle;
+    cursor: pointer;
   }
 
   .updated-row {
